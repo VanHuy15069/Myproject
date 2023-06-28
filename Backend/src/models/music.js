@@ -12,8 +12,8 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Music.hasMany(models.MusicDetail, {foreignKey: 'musicId', as: 'musicInfo'})
-      Music.hasMany(models.Comment, {foreignKey: 'musicId', as: 'musicInfo'})
-      Music.hasMany(models.Favorite, {foreignKey: 'musicId', as: 'musicInfo'})
+      Music.hasMany(models.Comment, {foreignKey: 'musicId', as: 'musicComment'})
+      Music.hasMany(models.Favorite, {foreignKey: 'musicId', as: 'musicFavorite'})
       Music.belongsTo(models.Category, {foreignKey: 'categoryId', targetKey: 'id', as: 'categoryInfo'})
     }
   }
