@@ -12,6 +12,9 @@ module.exports = {
       categoryId: {
         type: Sequelize.INTEGER
       },
+      singerId: {
+        type: Sequelize.STRING
+      },
       musicName: {
         type: Sequelize.STRING
       },
