@@ -3,6 +3,7 @@ import * as sliderService from '../services/sliderService'
 export const addSlider = async (req, res) => {
     try {
         const image = req.file.filename
+        console.log(req.file);
         if(!image){
             return res.status(404).json({
                 err: 1,

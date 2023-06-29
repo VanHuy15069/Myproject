@@ -13,15 +13,19 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       singerId: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       musicName: {
+        type: Sequelize.STRING
+      },
+      musicLink: {
         type: Sequelize.STRING
       },
       description: {
         type: Sequelize.TEXT
       },
       image: {
+        allowNull: true,
         type: Sequelize.STRING
       },
       views: {

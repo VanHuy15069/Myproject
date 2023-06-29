@@ -11,8 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Music.belongsTo(models.Singer, {foreignKey: 'singerId', targetKey: 'id', as: 'musicInfo'})
-      Music.hasMany(models.Comment, {foreignKey: 'musicId', as: 'musicComment'})
+      Music.belongsTo(models.Singer, {foreignKey: 'singerId', targetKey: 'id', as: 'singerInfo'})
       Music.hasMany(models.Favorite, {foreignKey: 'musicId', as: 'musicFavorite'})
       Music.belongsTo(models.Category, {foreignKey: 'categoryId', targetKey: 'id', as: 'categoryInfo'})
     }
@@ -21,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     categoryId: DataTypes.INTEGER,
     singerId: DataTypes.INTEGER,
     musicName: DataTypes.STRING,
+    musicLink: DataTypes.STRING,
     description: DataTypes.TEXT,
     image: DataTypes.STRING,
     views: DataTypes.INTEGER,

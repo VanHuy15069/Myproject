@@ -12,7 +12,6 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       User.hasMany(models.Favorite, {foreignKey: 'userId', as: 'userFavorite'})
-      User.hasMany(models.Comment, {foreignKey: 'userId', as: 'userCommnet'})
     }
   }
   User.init({
