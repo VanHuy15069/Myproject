@@ -9,4 +9,5 @@ const singerRouter = express.Router()
     singerRouter.delete('/:id', singerController.deleteSinger)
     singerRouter.get('/singerInfor/:id', singerController.getOneSinger)
     singerRouter.get('/getAll', singerController.getAllSinger)
+    singerRouter.get('/searchSinger', singerController.searchSinger)
 export default singerRouter

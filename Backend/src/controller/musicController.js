@@ -146,3 +146,75 @@ export const serchNameMusic = async (req, res) => {
         })
     }
 }
+
+export const countViews = async (req, res) => {
+    try {
+        const response = await musicService.countViewService(req.params.id)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(500).json({
+            err: -1,
+            msg: 'failure' + error
+        })
+    }
+}
+
+export const countDownload = async (req, res) => {
+    try {
+        const response = await musicService.countDownloadService(req.params.id)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(500).json({
+            err: -1,
+            msg: 'failure' + error
+        })
+    }
+}
+
+export const deleteMusic = async (req, res) => {
+    try {
+        const response = await musicService.deleteMusicService(req.params.id)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(500).json({
+            err: -1,
+            msg: 'failure' + error
+        })
+    }
+}
+
+export const getAllMusic = async (req, res) => {
+    try {
+        const response = await musicService.getAllMusicService()
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(500).json({
+            err: -1,
+            msg: 'failure' + error
+        })
+    }
+}
+
+export const getOfWeekly = async (req, res) => {
+    try {
+        const response = await musicService.getOfWeeklyService()
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(500).json({
+            err: -1,
+            msg: 'failure' + error
+        })
+    }
+}
+
+export const getOneMusic = async (req, res) => {
+    try {
+        const response = await musicService.getOneMusicService(req.params.id)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(500).json({
+            err: -1,
+            msg: 'failure' + error
+        })
+    }
+}

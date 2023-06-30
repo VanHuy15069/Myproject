@@ -211,8 +211,8 @@ export const searchNameMusicService = (musicName, limit, offset, name, sort) =>
             if(!sort) sort = 'DESC'
             const music = await db.Music.findAndCountAll({
                 where: {musicName: {[Op.substring]: musicName}},
-                limit: limit,
-                offset: limit*offset,
+                limit: Number(limit),
+                offset: Number(limit*offset),
                 order: [[name, sort]],
                 include: [
                     {
@@ -221,6 +221,151 @@ export const searchNameMusicService = (musicName, limit, offset, name, sort) =>
                     }
                 ]
             })
+            resolve({
+                response: music,
+                err: 0,
+                msg: 'Get data successfully'
+            })
+        } catch (error) {
+            reject(error)
+        }
+    })
+
+export const countViewService = (id) =>
+    new Promise(async(resolve, reject) => {
+        try {
+            const music = await db.Music.findOne({where: {id: id}})
+            if(!music){
+                resolve({
+                    err: 2,
+                    msg: 'This data does not exist'
+                })
+            }
+            await music.update({views: music.views + 1})
+            resolve({
+                err: 0,
+                msg: 'Update data successfully'
+            })
+        } catch (error) {
+            reject(error)
+        }
+    })
+
+export const countDownloadService = (id) =>
+    new Promise(async(resolve, reject) => {
+        try {
+            const music = await db.Music.findOne({where: {id: id}})
+            if(!music){
+                resolve({
+                    err: 2,
+                    msg: 'This data does not exist'
+                })
+            }
+            await music.update({downLoad: music.downLoad + 1})
+            resolve({
+                err: 0,
+                msg: 'Update data successfully'
+            })
+        } catch (error) {
+            reject(error)
+        }
+    })
+
+export const deleteMusicService = (id) => 
+    new Promise(async(resolve, reject) => {
+        try {
+            const music = await db.Music.findOne({where: {id: id}})
+            if(!music){
+                resolve({
+                    err: 2,
+                    msg: 'This data does not exist'
+                })
+            }
+            await music.destroy()
+            resolve({
+                err: 0,
+                msg: 'Delete data successfully'
+            })
+        } catch (error) {
+            reject(error)
+        }
+    })
+
+export const getAllMusicService = () =>
+    new Promise(async(resolve, reject) => {
+        try {
+            const music = await db.Music.findAll({
+                include: [
+                    {   
+                        model: db.Category,
+                        as: 'categoryInfo',
+                    },
+                    {
+                        model: db.Singer,
+                        as: 'singerInfo',
+                    }
+                ]
+            })
+            resolve({
+                response: music,
+                err: 0,
+                msg: 'Get data successfully'
+            })
+        } catch (error) {
+            reject(error)
+        }
+    })
+
+export const getOfWeeklyService = () => 
+    new Promise(async(resolve, reject) => {
+        try {
+            const sevenDaysAgo = new Date()
+            sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
+            const music = await db.Music.findAll({
+                order: [['views', 'DESC']],
+                where: {updatedAt: {[Op.gte]: sevenDaysAgo}},
+                include: [
+                    {   
+                        model: db.Category,
+                        as: 'categoryInfo',
+                    },
+                    {
+                        model: db.Singer,
+                        as: 'singerInfo',
+                    }
+                ]
+            })
+            resolve({
+                response: music,
+                err: 0,
+                msg: 'Get data successfully'
+            })
+        } catch (error) {
+            reject(error)
+        }
+    })
+
+export const getOneMusicService = (id) => 
+    new Promise(async(resolve, reject) => {
+        try {
+            const music = await db.Music.findByPk(id, {
+                include: [
+                    {   
+                        model: db.Category,
+                        as: 'categoryInfo',
+                    },
+                    {
+                        model: db.Singer,
+                        as: 'singerInfo',
+                    }
+                ]
+            })
+            if(!music){
+                resolve({
+                    err: 2,
+                    msg: 'This data does not exist'
+                })
+            }
             resolve({
                 response: music,
                 err: 0,

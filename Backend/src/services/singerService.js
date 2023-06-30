@@ -1,6 +1,8 @@
 import db from "../models";
 import fs from 'fs'
 import path from "path";
+import { Op } from "sequelize";
+
 export const addSingerService = (data, image) => 
     new Promise(async(resolve, reject) => {
         try {
@@ -121,6 +123,29 @@ export const getAllSingerService = () =>
             const singers = await db.Singer.findAll()
             resolve({
                 response: singers,
+                err: 0,
+                msg: 'Successfully retrieved information'
+            })
+        } catch (error) {
+            reject(error)
+        }
+    })
+
+export const searchSingerService = (singerName, limit, offset, name, sort) =>
+    new Promise(async(resolve, reject) => {
+        try {
+            if(!limit) limit = 5
+            if(!offset) offset = 0
+            if(!name) name = 'id'
+            if(!sort) sort = 'DESC'
+            const singer = await db.Singer.findAndCountAll({
+                where: {singerName: {[Op.substring]: singerName}},
+                limit: Number(limit),
+                offset: Number(offset*limit),
+                order: [[name, sort]]
+            })
+            resolve({
+                response: singer,
                 err: 0,
                 msg: 'Successfully retrieved information'
             })

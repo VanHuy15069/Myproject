@@ -97,3 +97,16 @@ export const getAllSinger = async (req, res) => {
         })
     }
 }
+
+export const searchSinger = async (req, res) => {
+    try {
+        const {singerName, limit, offset, name, sort} = req.query
+        const response = await singerService.searchSingerService(singerName, limit, offset, name, sort)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(500).json({
+            err: -1,
+            msg: 'failure' + error
+        })
+    }
+}
