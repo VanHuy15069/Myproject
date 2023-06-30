@@ -12,6 +12,12 @@ module.exports = {
       categoryId: {
         type: Sequelize.INTEGER
       },
+      topicId: {
+        type: Sequelize.INTEGER
+      },
+      nationId: {
+        type: Sequelize.INTEGER
+      },
       singerId: {
         type: Sequelize.INTEGER
       },
@@ -21,20 +27,13 @@ module.exports = {
       musicLink: {
         type: Sequelize.STRING
       },
-      description: {
-        type: Sequelize.TEXT
-      },
-      image: {
-        allowNull: true,
-        type: Sequelize.STRING
-      },
       views: {
         type: Sequelize.INTEGER,
         defaultValue: 0
       },
-      downLoad: {
-        type: Sequelize.INTEGER,
-        defaultValue: 0
+      image: {
+        allowNull: true,
+        type: Sequelize.STRING
       },
       vip: {
         type: Sequelize.BOOLEAN,

@@ -2,10 +2,10 @@ import * as musicService from '../services/musicService'
 
 export const addMusic = async (req, res) => {
     try {
-        const {categoryId, singerId, musicName, description} = req.body
+        const {categoryId,topicId, nationId, singerId, musicName} = req.body
         const musicLink = req.files.musicLink[0].filename
         const image = req.files.image[0].filename
-        if(!categoryId || !singerId || !musicName || !musicLink || !description || !image){
+        if(!categoryId || !singerId || !musicName || !musicLink || !image || !nationId || !topicId){
             return res.status(404).json({
                 err: 1,
                 msg: 'Full information is required'
@@ -64,8 +64,8 @@ export const updateMusic = async (req, res) => {
 export const updateInforMusic = async (req, res) => {
     try {
         const id = req.params.id
-        const {categoryId, singerId, musicName, description} = req.body
-        if(!categoryId || !singerId || !musicName || !description){
+        const {categoryId,topicId, nationId, singerId, musicName, description} = req.body
+        if(!categoryId || !singerId || !musicName || !description || !topicId || !nationId){
             return res.status(404).json({
                 err: 1,
                 msg: 'Full information is required'
@@ -98,12 +98,6 @@ export const getByCategory = async (req, res) => {
     try {
         const categoryId = req.params.id
         const {limit, offset,name, sort} = req.query
-        if(!limit || !offset || !categoryId){
-            return res.status(404).json({
-                err: 1,
-                msg: 'Full information is required'
-            })
-        }
         const response = await musicService.getByCategoryService(categoryId, limit, offset, name, sort)
         return res.status(200).json(response)
     } catch (error) {
@@ -118,12 +112,6 @@ export const getBySinger = async (req, res) => {
     try {
         const singerId = req.params.id
         const {limit, offset, name, sort} = req.query
-        if(!limit || !offset || !singerId){
-            return res.status(404).json({
-                err: 1,
-                msg: 'Full information is required'
-            })
-        }
         const response = await musicService.getBySingerService(singerId, limit, offset, name, sort)
         return res.status(200).json(response)
     } catch (error) {
@@ -150,18 +138,6 @@ export const serchNameMusic = async (req, res) => {
 export const countViews = async (req, res) => {
     try {
         const response = await musicService.countViewService(req.params.id)
-        return res.status(200).json(response)
-    } catch (error) {
-        return res.status(500).json({
-            err: -1,
-            msg: 'failure' + error
-        })
-    }
-}
-
-export const countDownload = async (req, res) => {
-    try {
-        const response = await musicService.countDownloadService(req.params.id)
         return res.status(200).json(response)
     } catch (error) {
         return res.status(500).json({

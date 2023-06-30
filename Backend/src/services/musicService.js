@@ -10,10 +10,11 @@ export const addMusicService = (data, image, link) =>
                 where: {musicName: data.musicName},
                 defaults: {
                     categoryId: data.categoryId,
+                    topicId: data.topicId,
+                    nationId: data.nationId,
                     singerId: data.singerId,
                     musicName: data.musicName,
                     musicLink: link,
-                    description: data.description,
                     image: image
                 }
             })
@@ -89,6 +90,8 @@ export const updateInforMusicService = (data, id) =>
             }
             await music.update({
                 categoryId: data.categoryId,
+                topicId: data.topicId,
+                nationId: data.nationId,
                 singerId: data.singerId,
                 musicName: data.musicName,
                 description: data.description
@@ -131,19 +134,15 @@ export const upgrateVipService = (id) =>
 export const getByCategoryService = (categoryId, limit, offset, name, sort) =>
     new Promise(async (resolve, reject) => {
         try {
-            const query = {
-                name: 'id',
-                sort: 'DESC'
-            }
-            if(name && sort){
-                query.name = name
-                query.sort = sort
-            }
+            const queries = {}
+            if(limit) queries.limit = Number(limit)
+            if(offset) queries.offset = Number(offset*limit)
+            if(!name) name = 'id'
+            if(!sort) sort = 'DESC'
             const music = await db.Music.findAndCountAll({
                 where: {categoryId: categoryId},
-                limit: Number(limit),
-                offset: Number(offset*limit),
-                order: [[query.name, query.sort]],
+                ...queries,
+                order: [[name, sort]],
                 include: [
                     {   
                         model: db.Category,
@@ -168,19 +167,15 @@ export const getByCategoryService = (categoryId, limit, offset, name, sort) =>
 export const getBySingerService = (singerId, limit, offset, name, sort) =>
     new Promise(async(resolve, reject) => {
         try {
-            const query = {
-                name: 'id',
-                sort: 'DESC'
-            }
-            if(name && sort){
-                query.name = name
-                query.sort = sort
-            }
+            const queries = {}
+            if(limit) queries.limit = Number(limit)
+            if(offset) queries.offset = Number(offset*limit)
+            if(!name) name = 'id'
+            if(!sort) sort = 'DESC'
             const music = await db.Music.findAndCountAll({
                 where: {singerId: singerId},
-                limit: Number(limit),
-                offset: Number(offset*limit),
-                order: [[query.name, query.sort]],
+                ...queries,
+                order: [[name, sort]],
                 include: [
                     {   
                         model: db.Category,
@@ -251,26 +246,6 @@ export const countViewService = (id) =>
         }
     })
 
-export const countDownloadService = (id) =>
-    new Promise(async(resolve, reject) => {
-        try {
-            const music = await db.Music.findOne({where: {id: id}})
-            if(!music){
-                resolve({
-                    err: 2,
-                    msg: 'This data does not exist'
-                })
-            }
-            await music.update({downLoad: music.downLoad + 1})
-            resolve({
-                err: 0,
-                msg: 'Update data successfully'
-            })
-        } catch (error) {
-            reject(error)
-        }
-    })
-
 export const deleteMusicService = (id) => 
     new Promise(async(resolve, reject) => {
         try {
@@ -296,6 +271,14 @@ export const getAllMusicService = () =>
         try {
             const music = await db.Music.findAll({
                 include: [
+                    {   
+                        model: db.Topic,
+                        as: 'topicInfo',
+                    },
+                    {
+                        model: db.Nation,
+                        as: 'nationInfo',
+                    },
                     {   
                         model: db.Category,
                         as: 'categoryInfo',

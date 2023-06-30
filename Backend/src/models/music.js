@@ -14,17 +14,19 @@ module.exports = (sequelize, DataTypes) => {
       Music.belongsTo(models.Singer, {foreignKey: 'singerId', targetKey: 'id', as: 'singerInfo'})
       Music.hasMany(models.Favorite, {foreignKey: 'musicId', as: 'musicFavorite'})
       Music.belongsTo(models.Category, {foreignKey: 'categoryId', targetKey: 'id', as: 'categoryInfo'})
+      Music.belongsTo(models.Topic, {foreignKey: 'topicId', targetKey: 'id', as: 'topicInfo'})
+      Music.belongsTo(models.Nation, {foreignKey: 'nationId', targetKey: 'id', as: 'nationInfo'})
     }
   }
   Music.init({
     categoryId: DataTypes.INTEGER,
+    topicId: DataTypes.INTEGER,
+    nationId: DataTypes.INTEGER,
     singerId: DataTypes.INTEGER,
     musicName: DataTypes.STRING,
     musicLink: DataTypes.STRING,
-    description: DataTypes.TEXT,
-    image: DataTypes.STRING,
     views: DataTypes.INTEGER,
-    downLoad: DataTypes.INTEGER,
+    image: DataTypes.STRING,
     vip: DataTypes.BOOLEAN,
   }, {
     sequelize,
