@@ -1,0 +1,78 @@
+import classNames from 'classnames/bind';
+import styles from './SideBar.module.scss';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleDot, faHeart, faStar } from '@fortawesome/free-regular-svg-icons';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { faHeadphones, faIcons, faMusic } from '@fortawesome/free-solid-svg-icons';
+const cx = classNames.bind(styles);
+function SideBar() {
+    const navigate = useNavigate();
+    const user = localStorage.getItem('user');
+    return (
+        <div className={cx('wrapper')}>
+            <div className={cx('wrap-logo')}>
+                <div className={cx('logo')}></div>
+            </div>
+            <div className={cx('menu')}>
+                <NavLink to={'/'} end className={(nav) => cx({ active: nav.isActive })}>
+                    <div className={cx('menu-item')}>
+                        <span className={cx('icon')}>
+                            <FontAwesomeIcon icon={faCircleDot} />
+                        </span>
+                        <p className={cx('text')}>Khám Phá</p>
+                    </div>
+                </NavLink>
+                <NavLink to={'/library'} end className={(nav) => cx({ active: nav.isActive })}>
+                    <div className={cx('menu-item')}>
+                        <span className={cx('icon')}>
+                            <FontAwesomeIcon icon={faHeadphones} />
+                        </span>
+                        <p className={cx('text')}>Thư Viện</p>
+                    </div>
+                </NavLink>
+                <NavLink to={'/rating'} end className={(nav) => cx({ active: nav.isActive })}>
+                    <div className={cx('menu-item')}>
+                        <span className={cx('icon')}>
+                            <FontAwesomeIcon icon={faMusic} />
+                        </span>
+                        <p className={cx('text')}>BXH Nhạc Mới</p>
+                    </div>
+                </NavLink>
+                <NavLink to={'/category'} end className={(nav) => cx({ active: nav.isActive })}>
+                    <div className={cx('menu-item')}>
+                        <span className={cx('icon')}>
+                            <FontAwesomeIcon icon={faIcons} />
+                        </span>
+                        <p className={cx('text')}>Chủ Đề & Thể Loại</p>
+                    </div>
+                </NavLink>
+                <NavLink to={'/category'} end className={(nav) => cx({ active: nav.isActive })}>
+                    <div className={cx('menu-item')}>
+                        <span className={cx('icon')}>
+                            <FontAwesomeIcon icon={faStar} />
+                        </span>
+                        <p className={cx('text')}>Top 100</p>
+                    </div>
+                </NavLink>
+                {user && (
+                    <NavLink to={'/category'} end className={(nav) => cx({ active: nav.isActive })}>
+                        <div className={cx('menu-item')}>
+                            <span className={cx('icon')}>
+                                <FontAwesomeIcon icon={faHeart} />
+                            </span>
+                            <p className={cx('text')}>BÀI hát yêu thích</p>
+                        </div>
+                    </NavLink>
+                )}
+            </div>
+            {!user && (
+                <div className={cx('btn')}>
+                    <button className={cx('btn-login')} onClick={() => navigate('/login')}>
+                        Đăng Nhập
+                    </button>
+                </div>
+            )}
+        </div>
+    );
+}
+export default SideBar;

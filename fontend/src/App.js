@@ -1,25 +1,53 @@
-import logo from './logo.svg';
-import './App.css';
-
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { publicRouter, adminRouter } from './routes';
+import DefaultLayout from './layout/DefaultLayout/DefaultLayout';
+import { Fragment } from 'react';
+import AdminLayout from './layout/AdminLayout/AdminLayout';
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const user = JSON.parse(localStorage.getItem('user'));
+    let admin = false;
+    if (user) {
+        admin = user.isAdmin;
+    }
+    return (
+        <div className="App">
+            <Routes>
+                {publicRouter.map((route, index) => {
+                    const Layout = route.layout === null ? Fragment : DefaultLayout;
+                    const Page = route.component;
+                    return (
+                        <Route
+                            key={index}
+                            path={route.path}
+                            element={
+                                <Layout>
+                                    <Page />
+                                </Layout>
+                            }
+                        />
+                    );
+                })}
+                {adminRouter.map((route, index) => {
+                    const Page = route.component;
+                    return (
+                        <Route
+                            key={index}
+                            path={route.path}
+                            element={
+                                admin ? (
+                                    <AdminLayout>
+                                        <Page />
+                                    </AdminLayout>
+                                ) : (
+                                    <Navigate to={'/login'} />
+                                )
+                            }
+                        />
+                    );
+                })}
+            </Routes>
+        </div>
+    );
 }
 
 export default App;

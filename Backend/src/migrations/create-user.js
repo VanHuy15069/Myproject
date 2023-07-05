@@ -21,6 +21,10 @@ module.exports = {
       password: {
         type: Sequelize.STRING
       },
+      image: {
+        allowNull: true,
+        type: Sequelize.STRING
+      },
       vip: {
         type: Sequelize.BOOLEAN,
         defaultValue: false

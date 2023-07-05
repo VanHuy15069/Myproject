@@ -1,0 +1,60 @@
+.table {
+    width: 100%;
+    height: auto;
+    background-color: transparent;
+    border-collapse: collapse;
+    & tr {
+        border-bottom: 1px solid hsla(0, 0%, 100%, 0.1);
+    }
+    & td {
+        padding: 12px 0;
+        text-align: center;
+    }
+}
+.img-col {
+    display: flex;
+    justify-content: center;
+}
+.data-img {
+    text-align: center;
+    height: 100px;
+    width: 200px;
+}
+
+.img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+.btn {
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    &.btn-update {
+        background-color: blueviolet;
+    }
+    &.btn-delete {
+        background-color: crimson;
+    }
+}
+.icon {
+    margin-right: 6px;
+}
+.msg {
+    position: fixed;
+    top: 70px;
+    right: 0;
+    animation: active ease-out 0.5s;
+    z-index: 999;
+}
+@keyframes active {
+    from {
+        transform: translateX(100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}

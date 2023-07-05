@@ -1,0 +1,15 @@
+.wrapper {
+    display: flex;
+    align-items: center;
+    background-color: rgb(37, 220, 0);
+    padding: 12px 24px;
+    border-radius: 3px;
+    justify-content: center;
+    min-width: 300px;
+    font-size: 1.8rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+.icon {
+    margin-left: 6px;
+}

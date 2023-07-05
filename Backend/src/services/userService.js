@@ -1,5 +1,6 @@
 import db from "../models";
-
+import path from "path";
+import fs from 'fs'
 export const getOneUserService = (id) => 
     new Promise(async (resolve, reject) => {
         try {
@@ -96,3 +97,27 @@ export const deleteUserService = (id) =>
         }
     }
     )
+
+export const updateImageService = (image, id) => 
+    new Promise(async(resolve, reject) => {
+        try {
+            const user = await db.User.findByPk(id)
+            if(!user){
+                resolve({
+                    err: 2,
+                    msg: 'This user does not exist'
+                })
+            }
+            if(user.image){
+                const clearImg = path.resolve(__dirname, '..', '', `public/Images/${user.image}`);
+                fs.unlinkSync(clearImg)
+            }
+            await user.update({image: image})
+            resolve({
+                err: 0,
+                msg: 'Update successful'
+            })
+        } catch (error) {
+            reject(error)
+        }
+    })

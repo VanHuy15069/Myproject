@@ -1,0 +1,49 @@
+.wrapper {
+    width: 100%;
+    background-color: var(--primary);
+}
+.container {
+    width: 100%;
+    max-width: 2000px;
+}
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 240px;
+    height: calc(100vh - 90px);
+    max-height: calc(100vh - 90px);
+    overflow-y: hidden;
+    background-color: var(--sideBar);
+    &:hover {
+        overflow-y: overlay;
+    }
+}
+.content {
+    padding: 0 59px;
+    margin-left: 240px;
+}
+.header {
+    position: fixed;
+    top: 0;
+    left: 240px;
+    right: 0;
+    z-index: 99;
+    min-width: 640px;
+}
+.main {
+    display: block;
+    padding-top: 70px;
+    margin-bottom: 90px;
+    background-color: var(--primary);
+    min-height: calc(100vh - 90px);
+}
+.audio {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 90px;
+    padding: 0 20px;
+    background-color: #130c1c;
+}

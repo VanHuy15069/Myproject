@@ -1,0 +1,125 @@
+.table {
+    width: 100%;
+    height: auto;
+    background-color: transparent;
+    border-collapse: collapse;
+    & tr {
+        border-bottom: 1px solid hsla(0, 0%, 100%, 0.1);
+    }
+    & td {
+        padding: 12px 0;
+        text-align: center;
+    }
+}
+.img-col {
+    display: flex;
+    justify-content: center;
+}
+.data-img {
+    text-align: center;
+    height: 100px;
+    width: 200px;
+}
+
+.img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+.btn {
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    &.btn-update {
+        background-color: blueviolet;
+    }
+    &.btn-delete {
+        background-color: crimson;
+    }
+}
+.icon {
+    margin-right: 6px;
+}
+.title {
+    text-align: center;
+    margin: 8px 0;
+}
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+.item {
+    margin: 12px 0;
+    display: flex;
+    align-items: center;
+}
+.text {
+    width: 24%;
+    min-width: 120px;
+}
+.file {
+    flex: 1;
+    flex-wrap: wrap;
+    display: flex;
+    align-items: center;
+}
+.img-upload {
+    width: 40%;
+    min-width: 150px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-left: 32px;
+}
+.input {
+    border: none;
+    color: #fff;
+    border-bottom: 1px solid hsla(0, 0%, 100%, 0.1);
+    width: 100%;
+    padding: 2px 4px;
+    font-size: 1.6rem;
+    outline: none;
+    caret-color: #fff;
+    background-color: transparent;
+    &:focus {
+        border-bottom: 1px solid hsla(0, 0%, 100%, 0.2);
+    }
+}
+.inputfile {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+.inputfile + label {
+    padding: 4px 8px;
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: white;
+    background-color: rgb(65, 29, 128);
+    display: inline-block;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.msg {
+    position: fixed;
+    top: 70px;
+    right: 0;
+    animation: active ease-out 0.5s;
+    z-index: 999;
+}
+@keyframes active {
+    from {
+        transform: translateX(100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}

@@ -1,0 +1,13 @@
+.slider {
+    padding: 32px 0;
+}
+
+.img-slider {
+    display: block;
+    width: 100%;
+    height: 220px;
+    object-position: center;
+    object-fit: cover;
+    border-radius: 10px;
+    overflow: hidden;
+}
