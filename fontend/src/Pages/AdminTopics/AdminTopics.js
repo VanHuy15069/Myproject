@@ -32,8 +32,8 @@ function AdminTopics() {
             .then((res) => {
                 setTopics(res.data.response);
             })
-            .catch((err) => console.log(err));
-    }, [render]);
+            .catch(() => navigate('/error'));
+    }, [render, navigate]);
     useEffect(() => {
         return () => {
             URL.revokeObjectURL(imgUpload);
@@ -209,9 +209,9 @@ function AdminTopics() {
                         }}
                         type={'submit'}
                         check={check}
+                        title={header}
                     >
                         <div className={cx('form-add')}>
-                            <h2 className={cx('title')}>{header}</h2>
                             <div className={cx('container')}>
                                 <div className={cx('item')}>
                                     <p className={cx('text')}>Tên chủ đề:</p>
