@@ -8,7 +8,7 @@ import {
     faGear,
     faMagnifyingGlass,
 } from '@fortawesome/free-solid-svg-icons';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { userImg } from '~/Images';
 import SettingBox from '../SettingBox/SettingBox';
@@ -16,6 +16,8 @@ import BoxUser from '../BoxUser/BoxUser';
 const cx = classNames.bind(styles);
 function Header() {
     const navigate = useNavigate();
+    const ref1 = useRef();
+    const ref2 = useRef();
     const [avata, setAvata] = useState(userImg);
     const [showBox, setShowBox] = useState(false);
     const [showBoxUser, setShowBoxUser] = useState(false);
@@ -34,6 +36,18 @@ function Header() {
         }
         setShowBox(false);
     };
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (ref1.current && !ref1.current.contains(event.target)) setShowBox(false);
+            if (ref2.current && !ref2.current.contains(event.target)) setShowBoxUser(false);
+        };
+
+        document.addEventListener('click', handleClickOutside);
+
+        return () => {
+            document.removeEventListener('click', handleClickOutside);
+        };
+    }, []);
     return (
         <div className={cx('wrapper')}>
             <div className={cx('left')}>
@@ -59,7 +73,7 @@ function Header() {
                     </span>
                     <p>Tải bản Windows</p>
                 </div>
-                <div className={cx('icon-setting')}>
+                <div className={cx('icon-setting')} ref={ref1}>
                     <span
                         className={cx('setting')}
                         onClick={() => {
@@ -72,7 +86,7 @@ function Header() {
                     </span>
                     <div className={cx('setting-box')}>{showBox && <SettingBox />}</div>
                 </div>
-                <div className={cx('avata')}>
+                <div className={cx('avata')} ref={ref2}>
                     <img className={cx('user-image')} src={avata} alt="user" onClick={handleShow} />
                     {showBoxUser && user && (
                         <div className={cx('box-user')}>

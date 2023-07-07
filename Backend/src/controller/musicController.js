@@ -64,8 +64,8 @@ export const updateMusic = async (req, res) => {
 export const updateInforMusic = async (req, res) => {
     try {
         const id = req.params.id
-        const {categoryId,topicId, nationId, singerId, musicName, description} = req.body
-        if(!categoryId || !singerId || !musicName || !description || !topicId || !nationId){
+        const {categoryId, topicId, nationId, singerId, musicName} = req.body
+        if(!categoryId || !singerId || !musicName || !topicId || !nationId){
             return res.status(404).json({
                 err: 1,
                 msg: 'Full information is required'

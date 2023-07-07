@@ -10,14 +10,14 @@ const storageImage = multer.diskStorage({
     }
 })
 
-// const storageMusic = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, path.resolve(__dirname, '..', '', 'public/Music'))
-//   },
-//   filename: function (req, file, cb) {
-//     cb(null, Date.now() + path.extname(file.originalname))
-//   }
-// })
+const storageMusic = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.resolve(__dirname, '..', '', 'public/Images'))
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname))
+  }
+})
 
 export const uploadImage = multer({
   storage: storageImage,
@@ -34,11 +34,11 @@ export const uploadImage = multer({
 }).single('image');
 
 export const uploadMusic = multer({
-  storage: storageImage,
+  storage: storageMusic,
   limits: { fileSize: '10000000' }
 }).single('musicLink');
 
-export const uploadManyFiles = multer({storage: storageImage}).fields([
+export const uploadManyFiles = multer({storage: storageMusic}).fields([
   {name: 'musicLink', maxCount: 1},
   {name: 'image', maxCount: 1}
 ]) 

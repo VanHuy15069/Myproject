@@ -7,6 +7,7 @@ import AdminTopics from '~/Pages/AdminTopics/AdminTopics';
 import AdminNation from '~/Pages/AdminNation/AdminNation';
 import AdminCategory from '~/Pages/AdminCategory/AdminCategory';
 import AdminSinger from '~/Pages/AdminSinger/AdminSinger';
+import AdminMusic from '~/Pages/AdminMusic/AdminMusic';
 
 export const publicRouter = [
     { path: '/', component: Home },
@@ -21,4 +22,5 @@ export const adminRouter = [
     { path: '/admin/nation', component: AdminNation },
     { path: '/admin/category', component: AdminCategory },
     { path: '/admin/singer', component: AdminSinger },
+    { path: '/admin/music', component: AdminMusic },
 ];

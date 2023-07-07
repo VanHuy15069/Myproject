@@ -94,7 +94,6 @@ export const updateInforMusicService = (data, id) =>
                 nationId: data.nationId,
                 singerId: data.singerId,
                 musicName: data.musicName,
-                description: data.description
             })
             resolve({
                 err: 0,

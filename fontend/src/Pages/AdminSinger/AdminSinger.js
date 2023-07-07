@@ -225,8 +225,9 @@ function AdminSinger() {
                             </div>
                             <div className={cx('item')}>
                                 <p className={cx('text')}>Mô tả:</p>
-                                <input
-                                    className={cx('input')}
+                                <textarea
+                                    className={cx('input', 'text-area')}
+                                    rows={3}
                                     type="text"
                                     name="description"
                                     onChange={handleChange}
