@@ -234,7 +234,7 @@ function AdminMusic() {
     const handleMusic = () => {
         if (option === 1) {
             if (!musicName || !image || !linkMusic) setCheck('Bạn cần gửi đầy đủ thông tin!');
-            else if (!singer) setCheck('Ca sĩ này không tồn tại trên hệ thống');
+            else if (Object.keys(singer).length === 0) setCheck('Ca sĩ này không tồn tại trên hệ thống');
             else {
                 const formData = new FormData();
                 formData.append('musicName', musicName);
@@ -265,7 +265,7 @@ function AdminMusic() {
         }
         if (option === 2) {
             if (!musicName) setCheck('Bạn cần gửi đầy đủ thông tin!');
-            else if (!singer) setCheck('Ca sĩ này không tồn tại trên hệ thống');
+            else if (Object.keys(singer).length === 0) setCheck('Ca sĩ này không tồn tại trên hệ thống');
             else {
                 if (musicName && singer) {
                     axios

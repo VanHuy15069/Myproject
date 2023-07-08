@@ -7,6 +7,7 @@ function Search({ music, singer, ...props }) {
     const handleSinger = (item) => {
         props.onData(item);
     };
+
     return (
         <div className={cx('wrapper')}>
             <div className={cx('container')}>
@@ -29,11 +30,7 @@ function Search({ music, singer, ...props }) {
                         {singer.map((item, index) => {
                             return (
                                 <div className={cx('item-search')} key={index} onClick={() => handleSinger(item)}>
-                                    <SingerItem
-                                        follow={12}
-                                        singer={item.singerName}
-                                        image={`http://localhost:4000/src/${item.image}`}
-                                    />
+                                    <SingerItem singer={item} image={`http://localhost:4000/src/${item.image}`} />
                                 </div>
                             );
                         })}

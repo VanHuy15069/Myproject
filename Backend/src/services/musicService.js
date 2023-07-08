@@ -265,10 +265,17 @@ export const deleteMusicService = (id) =>
         }
     })
 
-export const getAllMusicService = () =>
+export const getAllMusicService = (limit, offset, name, sort) =>
     new Promise(async(resolve, reject) => {
         try {
+            const queries = {}
+            if(limit) queries.limit = Number(limit)
+            if(offset) queries.offset = Number(offset*limit)
+            if(!name) name = 'id'
+            if(!sort) sort = 'ASC'
             const music = await db.Music.findAll({
+                ...queries,
+                order: [[name, sort]],
                 include: [
                     {   
                         model: db.Topic,

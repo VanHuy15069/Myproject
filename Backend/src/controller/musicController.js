@@ -161,7 +161,8 @@ export const deleteMusic = async (req, res) => {
 
 export const getAllMusic = async (req, res) => {
     try {
-        const response = await musicService.getAllMusicService()
+        const {limit, offset, name, sort} = req.query
+        const response = await musicService.getAllMusicService(limit, offset, name, sort)
         return res.status(200).json(response)
     } catch (error) {
         return res.status(500).json({
