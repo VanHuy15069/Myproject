@@ -26,8 +26,8 @@ export const getAllUser = async (req, res) => {
 }
 
 export const vipUpgrade = async (req, res) => {
-    const id = req.params.id
     try {
+        const id = req.params.id
         const response = await userService.vipUpgradeService(id)
         return res.status(200).json(response)
     } catch (error) {

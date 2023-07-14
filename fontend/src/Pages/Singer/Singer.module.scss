@@ -1,0 +1,141 @@
+.header {
+    height: calc(302px - 70px);
+    margin-bottom: 30px;
+}
+.container {
+    display: flex;
+}
+.new {
+    width: 33.33%;
+}
+.title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+.content {
+    background-color: hsla(0, 0%, 100%, 0.05);
+    border-radius: 12px;
+    display: flex;
+    padding: 16px;
+    // margin-right: 28px;
+    cursor: pointer;
+    &:hover .img {
+        transform: scale(1.2);
+    }
+}
+.image-box {
+    border-radius: 6px;
+    height: 151px;
+    width: 151px;
+    overflow: hidden;
+}
+.img {
+    transition: transform linear 0.5s;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+.music-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 6px 0 6px 16px;
+    font-size: 1.2rem;
+    font-weight: 400;
+    line-height: 1.8;
+    color: rgba(254, 255, 255, 0.6);
+}
+.name {
+    margin-top: 12px;
+    margin-bottom: 2px;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #fff;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    white-space: normal;
+}
+.singer {
+    margin-bottom: 12px;
+}
+.outstanding {
+    flex: 1;
+    margin-left: 28px;
+}
+.heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.outstanding-title {
+    font-size: 2rem;
+    font-weight: 700;
+}
+.navigation {
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: hsla(0, 0%, 100%, 0.5);
+    cursor: pointer;
+    &:hover {
+        color: #c273ed;
+    }
+}
+.icon {
+    font-size: 1.6rem;
+    margin-left: 6px;
+}
+.list-music {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.item {
+    width: 50%;
+    padding: 0 14px;
+}
+.list-singer {
+    margin-top: 48px;
+}
+.info {
+    margin-top: 48px;
+}
+.content-desc {
+    display: flex;
+    height: min-content;
+}
+.image {
+    flex: 1;
+    margin-right: 30px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+.img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.right-content {
+    width: 60%;
+}
+
+.desc {
+    color: hsla(0, 0%, 100%, 0.5);
+    font-size: 1.4rem;
+    text-align: justify;
+    margin-bottom: 48px;
+    font-weight: 400;
+}
+.follow {
+    font-size: 2rem;
+    line-height: 24px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}

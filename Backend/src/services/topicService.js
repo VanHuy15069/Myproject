@@ -27,13 +27,20 @@ export const addTopic = (title, image) =>
         }
     })
 
-export const detailTopicService = (id) => 
+export const detailTopicService = (id, limit, offset, name, sort) => 
     new Promise(async(resolve, reject) => {
         try {
+            const query = {}
+            if(limit) query.limit = Number(limit)
+            if(offset) query.offset = Number(offset*limit)
+            if(!name) name = 'id'
+            if(!sort) sort = 'ASC'
             const topic = await db.Topic.findByPk(id,{
                 include: [
                     {
                         model: db.Music,
+                        ...query,
+                        order: [[name, sort]],
                         as: 'musicInfo',
                         include: [{
                             model: db.Singer,

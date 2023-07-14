@@ -16,6 +16,7 @@ import BoxUser from '../BoxUser/BoxUser';
 const cx = classNames.bind(styles);
 function Header() {
     const navigate = useNavigate();
+    const backgroundRef = useRef();
     const ref1 = useRef();
     const ref2 = useRef();
     const [avata, setAvata] = useState(userImg);
@@ -41,15 +42,25 @@ function Header() {
             if (ref1.current && !ref1.current.contains(event.target)) setShowBox(false);
             if (ref2.current && !ref2.current.contains(event.target)) setShowBoxUser(false);
         };
-
         document.addEventListener('click', handleClickOutside);
-
         return () => {
             document.removeEventListener('click', handleClickOutside);
         };
     }, []);
+    useEffect(() => {
+        const handleScroll = () => {
+            if (backgroundRef.current) {
+                if (window.scrollY > 10) {
+                    backgroundRef.current.style.backgroundColor = 'rgba(23,15,35,0.8)';
+                } else {
+                    backgroundRef.current.style.backgroundColor = 'transparent';
+                }
+            }
+        };
+        window.addEventListener('scroll', handleScroll);
+    }, []);
     return (
-        <div className={cx('wrapper')}>
+        <div className={cx('wrapper')} ref={backgroundRef}>
             <div className={cx('left')}>
                 <div className={cx('navigation')}>
                     <span className={cx('icon-prev')} onClick={() => navigate(-1)}>

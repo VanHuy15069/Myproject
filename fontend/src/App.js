@@ -1,14 +1,23 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { publicRouter, adminRouter } from './routes';
 import DefaultLayout from './layout/DefaultLayout/DefaultLayout';
-import { Fragment } from 'react';
+import { Fragment, useContext, useEffect } from 'react';
+import { Context } from './Provider/Provider';
 import AdminLayout from './layout/AdminLayout/AdminLayout';
 function App() {
     const user = JSON.parse(localStorage.getItem('user'));
+    const [, setIsLogin] = useContext(Context);
     let admin = false;
     if (user) {
         admin = user.isAdmin;
     }
+    useEffect(() => {
+        if (user) {
+            setIsLogin(true);
+        } else {
+            setIsLogin(false);
+        }
+    }, [user, setIsLogin]);
     return (
         <div className="App">
             <Routes>

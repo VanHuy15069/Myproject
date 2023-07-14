@@ -5,18 +5,41 @@ import { faArrowRightFromBracket, faCrown, faHeadphones } from '@fortawesome/fre
 import { faUser } from '@fortawesome/free-regular-svg-icons';
 import { userImg } from '~/Images';
 import { useEffect, useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Context } from '~/Provider/Provider';
+import BoxMSG from '../BoxMSG/BoxMSG';
+import axios from 'axios';
 const cx = classNames.bind(styles);
 function BoxUser({ user }) {
+    const navigate = useNavigate();
     const [, setIsLogin] = useContext(Context);
     const [image, setImage] = useState(userImg);
+    const [showMSG, setShowMSG] = useState(false);
     useEffect(() => {
         if (user.image) setImage(`http://localhost:4000/src/${user.image}`);
     }, [user]);
+    useEffect(() => {
+        if (showMSG) {
+            setTimeout(() => {
+                setShowMSG(false);
+            }, 3000);
+        }
+    }, [showMSG]);
     const handleLogout = () => {
         setIsLogin(false);
         localStorage.removeItem('user');
         window.location.reload();
+    };
+    const handleUpgrade = () => {
+        if (user) {
+            axios
+                .patch(`http://localhost:4000/api/user/upgrade/${user.id}`)
+                .then((res) => {
+                    setShowMSG(true);
+                    localStorage.setItem('user', JSON.stringify(res.data.response));
+                })
+                .catch(() => navigate('/error'));
+        }
     };
     return (
         <div className={cx('wrapper')}>
@@ -41,7 +64,11 @@ function BoxUser({ user }) {
                         )}
                     </div>
                 </div>
-                {!user.vip && <div className={cx('upgrate')}>Nâng cấp tài khoản</div>}
+                {!user.vip && (
+                    <div className={cx('upgrate')} onClick={handleUpgrade}>
+                        Nâng cấp tài khoản
+                    </div>
+                )}
             </div>
             <div className={cx('line')}></div>
             <div className={cx('user-setting')}>
@@ -66,6 +93,11 @@ function BoxUser({ user }) {
                 </span>
                 <p className={cx('text')}>Đăng xuất</p>
             </div>
+            {showMSG && (
+                <div className={cx('msg')} onClick={() => setShowMSG(false)}>
+                    <BoxMSG>Nâng cấp tài khoản thành công</BoxMSG>
+                </div>
+            )}
         </div>
     );
 }

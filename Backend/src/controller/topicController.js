@@ -22,7 +22,8 @@ export const addTopic = async (req, res) => {
 
 export const detailTopic = async (req, res) => {
     try {
-        const response = await topicService.detailTopicService(req.params.id)
+        const {limit, offset, name, sort} = req.query
+        const response = await topicService.detailTopicService(req.params.id, limit, offset, name, sort)
         return res.status(200).json(response)
     } catch (error) {
         return res.status(500).json({

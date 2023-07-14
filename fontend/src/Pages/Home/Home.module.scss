@@ -11,3 +11,65 @@
     border-radius: 10px;
     overflow: hidden;
 }
+.top-music {
+    margin-top: 48px;
+}
+.title {
+    margin-bottom: 20px;
+    font-size: 2rem;
+    font-weight: 700;
+}
+.control {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+}
+.btn {
+    padding: 4px 18px;
+    border: 1px solid hsla(0, 0%, 100%, 0.1);
+    border-radius: 100px;
+    width: 100px;
+    margin-right: 15px;
+    font-weight: 400;
+    font-size: 1.2rem;
+    background-color: transparent;
+    color: #fff;
+    text-transform: uppercase;
+    cursor: pointer;
+    &.active {
+        background-color: #c273ed;
+        font-weight: 500;
+    }
+}
+.navigation {
+    display: flex;
+    align-items: center;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: hsla(0, 0%, 100%, 0.5);
+    cursor: pointer;
+    &:hover {
+        color: #c273ed;
+    }
+}
+.icon {
+    font-size: 1.6rem;
+    margin-left: 6px;
+}
+.list {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 0 -14px;
+}
+.item {
+    padding: 10px 14px;
+    border-radius: 4px;
+    width: calc(100% / 3);
+    cursor: pointer;
+    &:hover {
+        background-color: hsla(0, 0%, 100%, 0.1);
+    }
+}

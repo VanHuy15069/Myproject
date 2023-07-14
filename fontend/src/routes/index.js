@@ -1,4 +1,5 @@
 import Home from '~/Pages/Home/Home';
+import Singer from '~/Pages/Singer/Singer';
 import Login from '~/Pages/Login/Login';
 import NotFound from '~/Pages/404NotFound/404NotFound';
 import Admin from '~/Pages/Admin/Admin';
@@ -13,6 +14,7 @@ export const publicRouter = [
     { path: '/', component: Home },
     { path: '/login', component: Login, layout: null },
     { path: '/error', component: NotFound, layout: null },
+    { path: '/singer/:id', component: Singer },
 ];
 export const userRouter = [];
 export const adminRouter = [

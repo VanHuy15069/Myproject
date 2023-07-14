@@ -1,4 +1,4 @@
-import db from "../models";
+import db, { sequelize } from "../models";
 import fs from 'fs'
 import path from "path";
 import { Op } from "sequelize";
@@ -146,6 +146,27 @@ export const searchSingerService = (singerName, limit, offset, name, sort) =>
             })
             resolve({
                 response: singer,
+                err: 0,
+                msg: 'Successfully retrieved information'
+            })
+        } catch (error) {
+            reject(error)
+        }
+    })
+
+export const randomSingerService = (id, limit, offset) => 
+    new Promise(async(resolve, reject) => {
+        try {
+            const queries = {}
+            if(limit) queries.limit = Number(limit)
+            if(offset) queries.offset = Number(limit*offset)
+            const singers = await db.Singer.findAndCountAll({
+                where: {id: {[Op.ne] : id}},
+                order: sequelize.random(),
+                ...queries
+            })
+            resolve({
+                response: singers,
                 err: 0,
                 msg: 'Successfully retrieved information'
             })

@@ -73,7 +73,6 @@ function Login() {
                         setIsLogin(true);
                         if (res.data.response.isAdmin) {
                             navigate('/admin');
-                            console.log(123);
                         } else {
                             navigate('/');
                         }

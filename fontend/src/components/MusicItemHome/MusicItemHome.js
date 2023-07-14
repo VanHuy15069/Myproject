@@ -1,5 +1,6 @@
 import classNames from 'classnames/bind';
 import styles from './MusicItemHome.module.scss';
+import { Link } from 'react-router-dom';
 const cx = classNames.bind(styles);
 function MusicItemHome({ song }) {
     return (
@@ -9,7 +10,9 @@ function MusicItemHome({ song }) {
             </div>
             <div className={cx('content')}>
                 <p className={cx('title')}>{song.musicName}</p>
-                <p className={cx('singer')}>{song.singerInfo.singerName}</p>
+                <Link to={`/singer/${song.singerInfo.id}`}>
+                    <p className={cx('singer')}>{song.singerInfo.singerName}</p>
+                </Link>
             </div>
         </div>
     );

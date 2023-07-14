@@ -45,7 +45,7 @@ export const getSinger = async (req, res) => {
 
 export const deleteFollow = async (req, res) => {
     try {
-        const {userId, singerId}= req.body
+        const {userId, singerId}= req.query
         if(!userId || !singerId){
             return res.status(404).json({
                 err: 1,
@@ -53,6 +53,25 @@ export const deleteFollow = async (req, res) => {
             })
         }
         const response = await followService.deleteFollowService(userId, singerId)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(500).json({
+            err: -1,
+            msg: 'failure ' + error
+        })
+    }
+}
+
+export const isFollow = async (req, res) => {
+    try {
+        const {userId, singerId} = req.query
+        if(!userId || !singerId){
+            return res.status(404).json({
+                err: 1,
+                msg: 'Full information is required'
+            })
+        }
+        const response = await followService.isFollowService(userId, singerId)
         return res.status(200).json(response)
     } catch (error) {
         return res.status(500).json({

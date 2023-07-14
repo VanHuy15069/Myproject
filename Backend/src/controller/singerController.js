@@ -110,3 +110,17 @@ export const searchSinger = async (req, res) => {
         })
     }
 }
+
+export const randomSinger = async (req, res) => {
+    try {
+        const id = req.params.id
+        const {limit, offset} = req.query
+        const response = await singerService.randomSingerService(id, limit, offset)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(500).json({
+            err: -1,
+            msg: 'failure' + error
+        })
+    }
+}

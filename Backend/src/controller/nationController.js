@@ -74,3 +74,29 @@ export const deleteNation = async (req, res) => {
         })
     }
 }
+
+export const getInternational = async (req, res) => {
+    try {
+        const {limit, offset, name, sort} = req.query
+        const response = await nationService.getInternationalService(limit, offset, name, sort)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(500).json({
+            err: -1,
+            msg: 'failure ' + error
+        })
+    }
+}
+
+export const getVietNam = async (req, res) => {
+    try {
+        const {limit, offset, name, sort} = req.query
+        const response = await nationService.getVietNamService(limit, offset, name, sort)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(500).json({
+            err: -1,
+            msg: 'failure ' + error
+        })
+    }
+}

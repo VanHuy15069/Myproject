@@ -46,7 +46,9 @@ export const vipUpgradeService = (id) =>
                 })
             }
             await user.update({vip: true})
+            await user.save()
             resolve({
+                response: user,
                 err: 0,
                 msg: 'Update successful'
             })

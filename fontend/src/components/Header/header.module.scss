@@ -4,9 +4,12 @@
     align-items: center;
     justify-content: space-between;
     height: 70px;
-    background-color: rgba($color: var(--primary), $alpha: 0.5);
-    backdrop-filter: blur(10px);
+    // background-color: transparent;
+    backdrop-filter: blur(20px);
     z-index: 99;
+}
+.navigation {
+    font-weight: 400;
 }
 .icon-prev {
     font-size: 2.2rem;

@@ -84,4 +84,23 @@ export const deleteFollowService = (userId, singerId) =>
         }
     })
 
-    
+export const isFollowService = (userId, singerId) =>
+    new Promise(async(resolve, reject) => {
+        try {
+            const follow = await db.Follow.findOne({
+                where: {userId: userId, singerId: singerId}
+            })
+            if(!follow){
+                resolve({
+                    response: false,
+                    msg: 'This data is not available'
+                })
+            }
+            resolve({
+                response: true,
+                msg: 'This data is available'
+            })
+        } catch (error) {
+            reject(error)
+        }
+    })
