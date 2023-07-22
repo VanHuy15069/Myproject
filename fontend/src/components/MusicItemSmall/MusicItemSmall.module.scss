@@ -1,7 +1,15 @@
 .wrapper {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     width: 100%;
+    &:hover .action {
+        display: flex;
+    }
+}
+.container {
+    display: flex;
+    align-items: center;
 }
 .img {
     width: 60px;
@@ -41,11 +49,49 @@
     font-size: 1.2rem;
     font-weight: 400;
     color: hsla(0, 0%, 100%, 0.5);
-    &.singer {
-        width: fit-content;
-    }
-    &.singer:hover {
+}
+.singer {
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: hsla(0, 0%, 100%, 0.5);
+    width: fit-content;
+    &:hover {
         color: #c273ed;
         text-decoration: underline;
+    }
+}
+.action {
+    display: none;
+    align-items: center;
+}
+.icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 4px;
+    font-size: 1.3rem;
+    height: 32px;
+    width: 32px;
+    border-radius: 50%;
+    &:hover {
+        background-color: hsla(0, 0%, 100%, 0.1);
+    }
+}
+.added {
+    color: #c273ed;
+}
+.msg {
+    position: fixed;
+    bottom: 90px;
+    left: 0;
+    animation: active ease-out 0.5s;
+    z-index: 999;
+}
+@keyframes active {
+    from {
+        transform: translateX(-100%);
+    }
+    to {
+        transform: translateX(0);
     }
 }

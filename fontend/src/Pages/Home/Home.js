@@ -1,6 +1,7 @@
 import classNames from 'classnames/bind';
 import styles from './Home.module.scss';
-import { useState, useEffect } from 'react';
+import { Context } from '~/Provider/Provider';
+import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -12,6 +13,8 @@ import ListMusic from '~/components/ListMusic/ListMusic';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import MusicItemSmall from '~/components/MusicItemSmall/MusicItemSmall';
+import * as Image from '~/Images';
+import PopularItem from '~/components/PopularItem/PopularItem';
 
 const cx = classNames.bind(styles);
 function Home() {
@@ -26,11 +29,21 @@ function Home() {
     const [newMusicVN, setNewMusicVN] = useState([]);
     const [newMusics, setNewMusics] = useState([]);
     const [newMusicQT, setNewMusicQT] = useState([]);
+    const [singerPopular, setSingerPopular] = useState([]);
+    const [isRender, setIsRender] = useContext(Context);
     const [active, setActive] = useState({
         all: true,
         vn: false,
         qt: false,
     });
+    useEffect(() => {
+        axios
+            .get('http://localhost:4000/api/follow/getSingerPopular')
+            .then((res) => {
+                setSingerPopular(res.data.response);
+            })
+            .catch(() => navigate('/error'));
+    }, [navigate]);
     useEffect(() => {
         axios
             .get('http://localhost:4000/api/music/getAllMusic', {
@@ -161,6 +174,14 @@ function Home() {
         setNewMusics(newMusicQT);
         setActive({ all: false, vn: false, qt: true });
     };
+    const handleAddSong = (song) => {
+        const newList = [...newMusics];
+        const index = newMusics.indexOf(song);
+        newList.splice(index, 1);
+        newList.unshift(song);
+        localStorage.setItem('listMusic', JSON.stringify(newList));
+        setIsRender(!isRender);
+    };
     return (
         <div className={cx('wrapper')}>
             <div className={cx('slider')}>
@@ -218,7 +239,7 @@ function Home() {
                     {newMusics.map((music, index) => {
                         return (
                             <div key={index} className={cx('item')}>
-                                <MusicItemSmall music={music} />
+                                <MusicItemSmall music={music} onClick={() => handleAddSong(music)} />
                             </div>
                         );
                     })}
@@ -239,6 +260,55 @@ function Home() {
                     <ListMusic title={thirtTopic.title} music={thirtTopic.musicInfo} />
                 </div>
             )}
+            <div className={cx('singer')}>
+                <div className={cx('title')}>Nghệ Sĩ Thịnh Hành</div>
+                <div className={cx('list-singer')}>
+                    {singerPopular.map((singer, index) => {
+                        return (
+                            <PopularItem
+                                key={index}
+                                image={`http://localhost:4000/src/${singer.singerInfo.image}`}
+                                desc={`Top những bài hát hay nhất của ${singer.singerInfo.singerName}`}
+                            />
+                        );
+                    })}
+                </div>
+            </div>
+            <div className={cx('rank')}>
+                <div className={cx('rank-item')}>
+                    <div className={cx('rank-img')}>
+                        <img className={cx('image-rank')} src={Image.rankVN} alt="" />
+                    </div>
+                </div>
+                <div className={cx('rank-item')}>
+                    <div className={cx('rank-img')}>
+                        <img className={cx('image-rank')} src={Image.rankUSUK} alt="" />
+                    </div>
+                </div>
+                <div className={cx('rank-item')}>
+                    <div className={cx('rank-img')}>
+                        <img className={cx('image-rank')} src={Image.rankKPop} alt="" />
+                    </div>
+                </div>
+            </div>
+            <div className={cx('top100')}>
+                <div className={cx('header-top100')}>
+                    <div className={cx('title')}>Top 100</div>
+                    <div className={cx('navigation')}>
+                        <p className={cx('text')}>Tất cả</p>
+                        <span className={cx('icon')}>
+                            <FontAwesomeIcon icon={faChevronRight} />
+                        </span>
+                    </div>
+                </div>
+                <div className={cx('list-singer')}>
+                    <PopularItem image={Image.top100NT} desc={'Top 100 nhạc trẻ hay nhất'} bold />
+                    <PopularItem image={Image.top100USUK} desc={'Top 100 nhạc Âu Mỹ hay nhất'} bold />
+                    <PopularItem image={Image.top100EDM} desc={'Top 100 nhạc EDM hay nhất'} bold />
+                    <PopularItem image={Image.top100KPop} desc={'Top 100 nhạc K-Pop hay nhất'} bold />
+                    <PopularItem image={Image.top100Violin} desc={'Top 100 nhạc Violin hay nhất'} bold />
+                </div>
+            </div>
         </div>
     );
 }

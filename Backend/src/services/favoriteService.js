@@ -69,3 +69,24 @@ export const deleteFavoriteService = (userId, musicId) =>
             reject(error)
         }
     })
+
+export const isFavoriteService = (userId, musicId) => 
+    new Promise(async(resolve, reject) => {
+        try {
+            const isFavorite = await db.Favorite.findOne({
+                where: {userId: userId, musicId: musicId}
+            })
+            if(!isFavorite){
+                resolve({
+                    response: false,
+                    msg: 'Không có'
+                })
+            }
+            resolve({
+                response: true,
+                msg: 'có'
+            })
+        } catch (error) {
+            reject(error)
+        }
+    })

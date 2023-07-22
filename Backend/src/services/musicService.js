@@ -305,12 +305,15 @@ export const getAllMusicService = (limit, offset, name, sort) =>
         }
     })
 
-export const getOfWeeklyService = () => 
+export const getOfWeeklyService = (nationId, limit) => 
     new Promise(async(resolve, reject) => {
         try {
+            if(!limit) limit = 10
             const sevenDaysAgo = new Date()
             sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
             const music = await db.Music.findAll({
+                where: {nationId: nationId},
+                limit: Number(limit),
                 order: [['views', 'DESC']],
                 where: {updatedAt: {[Op.gte]: sevenDaysAgo}},
                 include: [

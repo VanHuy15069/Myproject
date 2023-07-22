@@ -29,15 +29,25 @@ function SingerRandomItem({ singer }) {
             })
             .catch(() => navigate('/error'));
     }, [singer.id, navigate]);
+    const handleClick = () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+        });
+    };
     return (
         <div className={cx('wrapper')}>
             <Link to={`/singer/${singer.id}`}>
-                <div className={cx('avata')}>
+                <div className={cx('avata')} onClick={handleClick}>
                     <img className={cx('img')} src={`http://localhost:4000/src/${singer.image}`} alt="" />
                 </div>
             </Link>
             <div className={cx('info')}>
-                <div className={cx('name')}>{singer.singerName}</div>
+                <Link to={`/singer/${singer.id}`}>
+                    <div className={cx('name')} onClick={handleClick}>
+                        {singer.singerName}
+                    </div>
+                </Link>
                 <div className={cx('follow')}>{follow < 1000 ? follow : Math.floor(follow / 1000) + 'K'} quan tâm</div>
             </div>
             <div className={cx('btn')}>

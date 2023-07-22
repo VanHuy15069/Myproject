@@ -80,3 +80,15 @@ export const isFollow = async (req, res) => {
         })
     }
 }
+
+export const getSingerPopular = async(req, res) => {
+    try {
+        const response = await followService.getSingerPopularService(req.query.limit)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(500).json({
+            err: -1,
+            msg: 'failure ' + error
+        })
+    }
+}

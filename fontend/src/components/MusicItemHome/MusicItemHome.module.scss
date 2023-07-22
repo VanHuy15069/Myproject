@@ -12,7 +12,7 @@
     width: 100%;
     object-fit: cover;
     object-position: center;
-    transition: transform linear 0.5s;
+    transition: transform ease-out 0.5s;
     &:hover {
         transform: scale(1.1);
     }

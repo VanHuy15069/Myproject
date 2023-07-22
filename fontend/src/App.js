@@ -1,23 +1,22 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { publicRouter, adminRouter } from './routes';
+import { publicRouter, userRouter, adminRouter } from './routes';
 import DefaultLayout from './layout/DefaultLayout/DefaultLayout';
-import { Fragment, useContext, useEffect } from 'react';
-import { Context } from './Provider/Provider';
+import { Fragment } from 'react';
 import AdminLayout from './layout/AdminLayout/AdminLayout';
 function App() {
     const user = JSON.parse(localStorage.getItem('user'));
-    const [, setIsLogin] = useContext(Context);
+    // const [, setIsLogin] = useContext(Context);
     let admin = false;
     if (user) {
         admin = user.isAdmin;
     }
-    useEffect(() => {
-        if (user) {
-            setIsLogin(true);
-        } else {
-            setIsLogin(false);
-        }
-    }, [user, setIsLogin]);
+    // useEffect(() => {
+    //     if (user) {
+    //         setIsLogin(true);
+    //     } else {
+    //         setIsLogin(false);
+    //     }
+    // }, [user, setIsLogin]);
     return (
         <div className="App">
             <Routes>
@@ -32,6 +31,25 @@ function App() {
                                 <Layout>
                                     <Page />
                                 </Layout>
+                            }
+                        />
+                    );
+                })}
+                {userRouter.map((route, index) => {
+                    const Layout = route.layout === null ? Fragment : DefaultLayout;
+                    const Page = route.component;
+                    return (
+                        <Route
+                            key={index}
+                            path={route.path}
+                            element={
+                                user ? (
+                                    <Layout>
+                                        <Page />
+                                    </Layout>
+                                ) : (
+                                    <Navigate to={'/login'} />
+                                )
                             }
                         />
                     );

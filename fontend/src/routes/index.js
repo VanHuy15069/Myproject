@@ -9,14 +9,17 @@ import AdminNation from '~/Pages/AdminNation/AdminNation';
 import AdminCategory from '~/Pages/AdminCategory/AdminCategory';
 import AdminSinger from '~/Pages/AdminSinger/AdminSinger';
 import AdminMusic from '~/Pages/AdminMusic/AdminMusic';
+import UserPage from '~/Pages/UserPage/UserPage';
+import SingerMusic from '~/Pages/SingerMusic/SingerMusic';
 
 export const publicRouter = [
     { path: '/', component: Home },
     { path: '/login', component: Login, layout: null },
     { path: '/error', component: NotFound, layout: null },
     { path: '/singer/:id', component: Singer },
+    { path: '/singer/:id/song', component: SingerMusic },
 ];
-export const userRouter = [];
+export const userRouter = [{ path: '/user', component: UserPage }];
 export const adminRouter = [
     { path: '/admin', component: Admin },
     { path: '/admin/slider', component: AdminSlider },

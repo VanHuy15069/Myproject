@@ -5,7 +5,7 @@ import { faArrowRightFromBracket, faCrown, faHeadphones } from '@fortawesome/fre
 import { faUser } from '@fortawesome/free-regular-svg-icons';
 import { userImg } from '~/Images';
 import { useEffect, useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Context } from '~/Provider/Provider';
 import BoxMSG from '../BoxMSG/BoxMSG';
 import axios from 'axios';
@@ -27,6 +27,7 @@ function BoxUser({ user }) {
     }, [showMSG]);
     const handleLogout = () => {
         setIsLogin(false);
+        navigate('/');
         localStorage.removeItem('user');
         window.location.reload();
     };
@@ -45,9 +46,11 @@ function BoxUser({ user }) {
         <div className={cx('wrapper')}>
             <div className={cx('user-wrapper')}>
                 <div className={cx('user')}>
-                    <div className={cx('avata')}>
-                        <img src={image} alt="" />
-                    </div>
+                    <Link to={`/user/${user.id}`}>
+                        <div className={cx('avata')}>
+                            <img src={image} alt="" />
+                        </div>
+                    </Link>
                     <div className={cx('info')}>
                         <div className={cx('user-name')}>
                             <p className={cx('name')}>{user.fullName}</p>
@@ -77,7 +80,9 @@ function BoxUser({ user }) {
                     <span className={cx('icon')}>
                         <FontAwesomeIcon icon={faUser} />
                     </span>
-                    <p className={cx('text')}>Thông tin cá nhân</p>
+                    <Link to={`/user`}>
+                        <p className={cx('text')}>Thông tin cá nhân</p>
+                    </Link>
                 </div>
                 <div className={cx('menu-item')}>
                     <span className={cx('icon')}>

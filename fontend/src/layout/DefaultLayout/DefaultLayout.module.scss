@@ -11,10 +11,11 @@
     top: 0;
     left: 0;
     width: 240px;
-    height: calc(100vh - 90px);
-    max-height: calc(100vh - 90px);
+    height: 100vh;
+    padding-bottom: 90px;
     overflow-y: hidden;
     background-color: var(--sideBar);
+    z-index: 999;
     &:hover {
         overflow-y: overlay;
     }
@@ -46,4 +47,5 @@
     height: 90px;
     padding: 0 20px;
     background-color: #130c1c;
+    z-index: 999;
 }

@@ -1,4 +1,4 @@
-import db from "../models";
+import db, { sequelize } from "../models";
 
 export const addFollowService = (userId, singerId) => 
     new Promise(async(resolve, reject) => {
@@ -99,6 +99,32 @@ export const isFollowService = (userId, singerId) =>
             resolve({
                 response: true,
                 msg: 'This data is available'
+            })
+        } catch (error) {
+            reject(error)
+        }
+    })
+
+export const getSingerPopularService = (limit) =>
+    new Promise(async(resolve, reject) => {
+        try {
+            if(!limit) limit = 5
+            const singers = await db.Follow.findAll({
+                attributes: ['singerId', [sequelize.fn('COUNT', sequelize.col('singerId')), 'count']],
+                group: ['singerId'],
+                order: sequelize.literal('count DESC'),
+                limit: Number(limit),
+                include: [
+                    {
+                        model: db.Singer,
+                        as: 'singerInfo'
+                    }
+                ]
+            }) 
+            resolve({
+                response: singers,
+                err: 0,
+                msg: 'Get data sucesfully'
             })
         } catch (error) {
             reject(error)

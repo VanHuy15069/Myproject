@@ -8,17 +8,20 @@ import {
     faGear,
     faMagnifyingGlass,
 } from '@fortawesome/free-solid-svg-icons';
-import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Context } from '~/Provider/Provider';
+import { useState, useEffect, useRef, useContext } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { userImg } from '~/Images';
 import SettingBox from '../SettingBox/SettingBox';
 import BoxUser from '../BoxUser/BoxUser';
 const cx = classNames.bind(styles);
 function Header() {
     const navigate = useNavigate();
+    const location = useLocation();
     const backgroundRef = useRef();
     const ref1 = useRef();
     const ref2 = useRef();
+    const [, , renderAvata] = useContext(Context);
     const [avata, setAvata] = useState(userImg);
     const [showBox, setShowBox] = useState(false);
     const [showBoxUser, setShowBoxUser] = useState(false);
@@ -28,19 +31,26 @@ function Header() {
         if (user && user.image) {
             setAvata(`http://localhost:4000/src/${user.image}`);
         }
-    }, [user]);
+    }, [user, renderAvata]);
+    useEffect(() => {
+        setShowBoxUser(false);
+        setShowBox(false);
+    }, [location]);
     const handleShow = () => {
         if (user) {
             setShowBoxUser(!showBoxUser);
         } else {
             setShowBoxLogin(!showBoxLogin);
         }
-        setShowBox(false);
+        // setShowBox(false);
     };
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (ref1.current && !ref1.current.contains(event.target)) setShowBox(false);
-            if (ref2.current && !ref2.current.contains(event.target)) setShowBoxUser(false);
+            if (ref2.current && !ref2.current.contains(event.target)) {
+                setShowBoxUser(false);
+                setShowBoxLogin(false);
+            }
         };
         document.addEventListener('click', handleClickOutside);
         return () => {

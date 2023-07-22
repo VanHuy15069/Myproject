@@ -34,7 +34,7 @@ export const getMusic = async(req, res) => {
 
 export const deleteFavorite = async (req, res) => {
     try {
-        const {userId, musicId} = req.body
+        const {userId, musicId} = req.query
         if(!userId || !musicId){
             return res.status(404).json({
                 err: 1,
@@ -49,4 +49,23 @@ export const deleteFavorite = async (req, res) => {
             msg: 'failure ' + error
         })
     }
+}
+
+export const isFavorite = async(req, res) => {
+        try {
+            const {userId, musicId} = req.query
+            if(!userId || !musicId){
+                return res.status(404).json({
+                    err: 1,
+                    msg: 'Full information is required'
+                })
+            }
+            const response = await favoriteService.isFavoriteService(userId, musicId)
+            return res.status(200).json(response)
+        } catch (error) {
+            return res.status(500).json({
+                err: -1,
+                msg: 'failure ' + error
+            })
+        }
 }

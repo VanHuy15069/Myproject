@@ -8,4 +8,5 @@ const userRouter = express.Router()
     userRouter.put('/:id', userController.updateUser)
     userRouter.delete('/:id', userController.deleteUser)
     userRouter.patch('/updateImg/:id', upload.uploadImage,userController.updateImage)
+    userRouter.patch('/updatePassword/:id', userController.updatePassword)
 export default userRouter

@@ -6,5 +6,6 @@ const followRouter = express.Router()
     followRouter.get('/countFollow/:id', followController.countFollows)
     followRouter.get('/getSinger/:id', followController.getSinger)
     followRouter.get('/isFollow', followController.isFollow)
+    followRouter.get('/getSingerPopular', followController.getSingerPopular)
     followRouter.delete('/delete', followController.deleteFollow)
 export default followRouter

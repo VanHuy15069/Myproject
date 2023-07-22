@@ -1,8 +1,9 @@
 import classNames from 'classnames/bind';
 import styles from './Singer.module.scss';
-import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useState, useEffect, useContext } from 'react';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import HeaderProfile from '~/components/HeaderProfile/HeaderProfile';
+import { Context } from '~/Provider/Provider';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
@@ -12,11 +13,15 @@ const cx = classNames.bind(styles);
 function Singer() {
     const params = useParams();
     const navigate = useNavigate();
+    const [isRender, setIsRender] = useContext(Context);
     const [singer, setSinger] = useState({});
     const [singerRandom, setSingerRandom] = useState([]);
     const [newMusic, setNewMusic] = useState({});
     const [outstandingMusic, setOutstandingMusic] = useState([]);
     const [follow, setFollow] = useState(0);
+    const user = JSON.parse(localStorage.getItem('user'));
+    const [isFollow, setIsFollow] = useState(false);
+    const [render, setRender] = useState(false);
     let formatDate = new Intl.DateTimeFormat('vi-VN', {
         day: '2-digit',
         month: '2-digit',
@@ -29,7 +34,7 @@ function Singer() {
                 setFollow(res.data.response);
             })
             .catch(() => navigate('/error'));
-    }, [singer.id, navigate]);
+    }, [singer.id, navigate, render]);
     useEffect(() => {
         axios
             .get(`http://localhost:4000/api/singer/singerInfor/${params.id}`)
@@ -74,19 +79,80 @@ function Singer() {
             })
             .catch(() => navigate('/error'));
     }, [params.id, navigate]);
+    useEffect(() => {
+        if (user && singer.id) {
+            axios
+                .get('http://localhost:4000/api/follow/isFollow', { params: { userId: user.id, singerId: singer.id } })
+                .then((res) => {
+                    setIsFollow(res.data.response);
+                })
+                .catch(() => navigate('/error'));
+        }
+    }, [render, singer.id, user, navigate]);
+    const handleAddFollows = () => {
+        if (user) {
+            axios
+                .post('http://localhost:4000/api/follow/addFollow', { singerId: singer.id, userId: user.id })
+                .then(() => {
+                    setRender(!render);
+                })
+                .catch(() => navigate('/error'));
+        } else {
+            navigate('/login');
+        }
+    };
+    const handleUnFollows = () => {
+        axios
+            .delete('http://localhost:4000/api/follow/delete', { params: { userId: user.id, singerId: singer.id } })
+            .then(() => {
+                setRender(!render);
+            })
+            .catch((err) => console.log(err));
+    };
+    const handleAddSong = (song) => {
+        const newList = [...outstandingMusic];
+        const index = outstandingMusic.indexOf(song);
+        newList.splice(index, 1);
+        newList.unshift(song);
+        localStorage.setItem('listMusic', JSON.stringify(newList));
+        setIsRender(!isRender);
+    };
+    const handleAddSongNew = (song) => {
+        const newList = [...outstandingMusic];
+        const index = outstandingMusic.findIndex((obj) => obj.id === song.id);
+        if (index !== -1) {
+            newList.splice(index, 1);
+        }
+        newList.unshift(song);
+        localStorage.setItem('listMusic', JSON.stringify(newList));
+        setIsRender(!isRender);
+    };
     return (
         <div className={cx('wrapper')}>
             <div className={cx('header')}>
-                <HeaderProfile singer={singer} />
+                <HeaderProfile
+                    singer
+                    image={singer.image}
+                    isFollow={isFollow}
+                    name={singer.singerName}
+                    follows={follow}
+                    ClickUnFollows={handleUnFollows}
+                    ClickAddFollows={handleAddFollows}
+                />
             </div>
             <div className={cx('container')}>
                 {newMusic && Object.keys(newMusic).length > 0 && (
                     <div className={cx('new')}>
                         <div className={cx('title')}>Mới phát hành</div>
-
-                        <div className={cx('content')}>
+                        <div className={cx('content')} onClick={() => handleAddSongNew(newMusic)}>
                             <div className={cx('image-box')}>
-                                <img className={cx('img')} src={`http://localhost:4000/src/${newMusic.image}`} alt="" />
+                                {newMusic.image && (
+                                    <img
+                                        className={cx('img')}
+                                        src={`http://localhost:4000/src/${newMusic.image}`}
+                                        alt=""
+                                    />
+                                )}
                             </div>
                             <div className={cx('music-info')}>
                                 <div className={cx('name')}>{newMusic.musicName}</div>
@@ -100,17 +166,19 @@ function Singer() {
                     <div className={cx('outstanding')}>
                         <div className={cx('heading')}>
                             <div className={cx('outstanding-title')}>Bài hát nổi bật</div>
-                            <div className={cx('navigation')}>
-                                <p className={cx('text')}>Tất cả</p>
-                                <span className={cx('icon')}>
-                                    <FontAwesomeIcon icon={faChevronRight} />
-                                </span>
-                            </div>
+                            <Link to={`/singer/${params.id}/song`}>
+                                <div className={cx('navigation')}>
+                                    <p className={cx('text')}>Tất cả</p>
+                                    <span className={cx('icon')}>
+                                        <FontAwesomeIcon icon={faChevronRight} />
+                                    </span>
+                                </div>
+                            </Link>
                         </div>
                         <div className={cx('list-music')}>
                             {outstandingMusic.map((music, index) => {
                                 return (
-                                    <div key={index} className={cx('item')}>
+                                    <div key={index} className={cx('item')} onClick={() => handleAddSong(music)}>
                                         <MusicOfSinger music={music} />
                                     </div>
                                 );

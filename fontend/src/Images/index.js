@@ -1,1 +1,9 @@
 export const userImg = require('./666201.png');
+export const rankVN = require('./song-vn-2x.jpg');
+export const rankUSUK = require('./web_song_usuk.jpg');
+export const rankKPop = require('./web_song_kpop.jpg');
+export const top100NT = require('./eeb389e4d08e20541846daae3ab30087.webp');
+export const top100USUK = require('./top100USUK.webp');
+export const top100KPop = require('./Top100Kpop.webp');
+export const top100EDM = require('./Top100EDM.webp');
+export const top100Violin = require('./Top100Violin.webp');

@@ -1,16 +1,14 @@
 import classNames from 'classnames/bind';
 import styles from './Login.module.scss';
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
-import { Context } from '~/Provider/Provider';
 import axios from 'axios';
 import BoxMSG from '~/components/BoxMSG/BoxMSG';
 const cx = classNames.bind(styles);
 function Login() {
     const navigate = useNavigate();
-    const [, setIsLogin] = useContext(Context);
     const [check, setCheck] = useState('');
     const [showMSG, setShowMSG] = useState(false);
     const [isLoginForm, setIsLoginForm] = useState(true);
@@ -70,7 +68,6 @@ function Login() {
                 .then((res) => {
                     if (res.data.err === 0) {
                         localStorage.setItem('user', JSON.stringify(res.data.response));
-                        setIsLogin(true);
                         if (res.data.response.isAdmin) {
                             navigate('/admin');
                         } else {
@@ -187,7 +184,7 @@ function Login() {
                 )}
             </div>
             <div className={cx('back')}>
-                <span className={cx('icon')} onClick={() => navigate('/')}>
+                <span className={cx('icon')} onClick={() => navigate(-1)}>
                     <FontAwesomeIcon icon={faArrowLeft} />
                 </span>
             </div>
