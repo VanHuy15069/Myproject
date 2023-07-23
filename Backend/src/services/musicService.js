@@ -367,3 +367,38 @@ export const getOneMusicService = (id) =>
             reject(error)
         }
     })
+
+export const favoriteService = (userId, name, sort) =>
+    new Promise(async(resolve, reject) => {
+        if(!name) name = 'createdAt'
+        if(!sort) sort = 'DESC'
+        try {
+            const music = await db.Music.findAll({
+                include: [
+                    {
+                        model: db.Favorite,
+                        as: 'musicFavorite',
+                        where: {userId: userId},
+                        order: [[name, sort]]
+                    },
+                    {
+                        model: db.Singer,
+                        as: 'singerInfo'
+                    }
+                ]
+            })
+            if(!music){
+                resolve({
+                    err: 2,
+                    msg: 'This data does not exist'
+                })
+            }
+            resolve({
+                response: music,
+                err: 0,
+                msg: 'Get data successfully'
+            })
+        } catch (error) {
+            reject(error)
+        }
+    })

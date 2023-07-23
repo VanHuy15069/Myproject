@@ -26,15 +26,24 @@ export const addFavoriteService = (userId, musicId) =>
         }
     })
 
-export const getMusicService = (userId) => 
+export const getMusicService = (userId, name, sort) => 
     new Promise(async(resolve, reject) => {
         try {
+            if(!name) name = 'createdAt'
+            if(!sort) sort = 'DESC'
             const music = await db.Favorite.findAll({
                 where: {userId: userId},
                 include: [
                     {
                         model: db.Music,
-                        as: 'musicInfo'
+                        as: 'musicInfo',
+                        order: [[name, sort]],
+                        include: [
+                            {
+                                model: db.Singer,
+                                as: 'singerInfo'
+                            }
+                        ]
                     }
                 ]
             })

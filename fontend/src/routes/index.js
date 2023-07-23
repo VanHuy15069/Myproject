@@ -11,6 +11,8 @@ import AdminSinger from '~/Pages/AdminSinger/AdminSinger';
 import AdminMusic from '~/Pages/AdminMusic/AdminMusic';
 import UserPage from '~/Pages/UserPage/UserPage';
 import SingerMusic from '~/Pages/SingerMusic/SingerMusic';
+import NewMusic from '~/Pages/NewMusic/NewMusic';
+import Library from '~/Pages/Library/Library';
 
 export const publicRouter = [
     { path: '/', component: Home },
@@ -18,8 +20,12 @@ export const publicRouter = [
     { path: '/error', component: NotFound, layout: null },
     { path: '/singer/:id', component: Singer },
     { path: '/singer/:id/song', component: SingerMusic },
+    { path: '/newMusic', component: NewMusic },
 ];
-export const userRouter = [{ path: '/user', component: UserPage }];
+export const userRouter = [
+    { path: '/user', component: UserPage },
+    { path: '/library', component: Library },
+];
 export const adminRouter = [
     { path: '/admin', component: Admin },
     { path: '/admin/slider', component: AdminSlider },

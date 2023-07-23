@@ -52,3 +52,26 @@
         background-color: hsla(0, 0%, 100%, 0.1);
     }
 }
+.header {
+    width: 100%;
+    text-transform: uppercase;
+    font-size: 1.2rem;
+    font-weight: 600;
+    height: 46px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    color: hsla(0, 0%, 100%, 0.5);
+    border-bottom: 1px solid hsla(0, 0%, 100%, 0.05);
+    user-select: none;
+    & p:first-child {
+        flex: 6;
+    }
+    & p:nth-child(2) {
+        flex: 2;
+    }
+    & p:last-child {
+        flex: 2;
+        text-align: right;
+    }
+}

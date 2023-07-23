@@ -120,13 +120,15 @@ function MusicOfSinger({ music, time, onClick }) {
                 <audio src={`http://localhost:4000/src/${music.musicLink}`} onLoadedMetadata={handleLoad} />
             )}
             <div className={cx('container')}>
-                <div className={cx('image')}>
-                    <img src={`http://localhost:4000/src/${music.image}`} alt="" />
-                </div>
                 <div className={cx('content')}>
-                    <div className={cx('music-info')}>
-                        <div className={cx('name')}>{music.musicName}</div>
-                        <div className={cx('singer')}>{music.singerInfo.singerName}</div>
+                    <div className={cx('music-avata')}>
+                        <div className={cx('image')}>
+                            <img src={`http://localhost:4000/src/${music.image}`} alt="" />
+                        </div>
+                        <div className={cx('music-info')}>
+                            <div className={cx('name')}>{music.musicName}</div>
+                            <div className={cx('singer')}>{music.singerInfo.singerName}</div>
+                        </div>
                     </div>
                     {time && <div className={cx('time')}>{formatDate.format(Date.parse(music.createdAt))}</div>}
                     <div className={cx('duration')}>

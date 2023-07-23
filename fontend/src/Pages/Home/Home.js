@@ -228,7 +228,7 @@ function Home() {
                             Quốc Tế
                         </button>
                     </div>
-                    <div className={cx('navigation')}>
+                    <div className={cx('navigation')} onClick={() => navigate('/newMusic')}>
                         <p className={cx('text')}>Tất cả</p>
                         <span className={cx('icon')}>
                             <FontAwesomeIcon icon={faChevronRight} />

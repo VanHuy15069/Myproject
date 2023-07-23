@@ -40,11 +40,18 @@ export const countFollowService = (singerId) =>
         }
     })
 
-export const getSingerService = (userId) =>
+export const getSingerService = (userId, limit, offset, name, sort) =>
     new Promise(async(resolve, reject) => {
         try {
+            const queries = {}
+            if(limit) queries.limit = Number(limit)
+            if(offset) queries.offset = Number(limit*offset)
+            if(!name) name = 'createdAt'
+            if(!sort) sort = 'DESC'
             const singer = await db.Follow.findAll({
                 where: {userId: userId},
+                ...queries,
+                order: [[name, sort]],
                 include: [
                     {
                         model: db.Singer,

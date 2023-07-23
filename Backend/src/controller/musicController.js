@@ -195,3 +195,17 @@ export const getOneMusic = async (req, res) => {
         })
     }
 }
+
+export const favorite = async (req, res) => {
+    try {
+        const id = req.params.id
+        const {name, sort} = req.query
+        const response = await musicService.favoriteService(id, name, sort)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(500).json({
+            err: -1,
+            msg: 'failure' + error
+        })
+    }
+}

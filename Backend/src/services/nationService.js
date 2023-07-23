@@ -183,3 +183,44 @@ export const getVietNamService = (limit, offset, name, sort) =>
             reject(error)
         }
     })
+
+export const getMusicOfNationNameService = (nationName, limit, offset, name, sort) =>
+    new Promise(async(resolve, reject) => {
+        try {
+            const queries = {}
+            if(limit) queries.limit = Number(limit)
+            if(offset) queries.offset = Number(offset*limit)
+            if(!name) name = 'createdAt'
+            if(!sort) sort = 'DESC'
+            const music = await db.Nation.findAll({
+                where: {nationName: nationName},
+                include: [
+                    {
+                        model: db.Music,
+                        as: 'musicInfo',
+                        ...queries,
+                        order: [[name, sort]],
+                        include: [
+                            {
+                                model: db.Singer,
+                                as: 'singerInfo'
+                            }
+                        ]
+                    }
+                ]
+            })
+            if(!music){
+                resolve({
+                    err: 2,
+                    msg: 'This data does not exist'
+                })
+            }
+            resolve({
+                response: music,
+                err: 0,
+                msg: 'Get data succesfully'
+            })
+        } catch (error) {
+            reject(error)
+        }
+    })

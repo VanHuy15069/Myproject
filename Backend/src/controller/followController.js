@@ -33,7 +33,9 @@ export const countFollows = async (req, res) => {
 
 export const getSinger = async (req, res) => {
     try {
-        const response = await followService.getSingerService(req.params.id)
+        const id = req.params.id
+        const {limit, offset, name, sort} = req.query
+        const response = await followService.getSingerService(id, limit, offset, name, sort)
         return res.status(200).json(response)
     } catch (error) {
         return res.status(500).json({

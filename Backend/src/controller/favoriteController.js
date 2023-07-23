@@ -22,7 +22,9 @@ export const addFavorite = async (req, res) => {
 
 export const getMusic = async(req, res) => {
     try {
-        const response = await favoriteService.getMusicService(req.params.id)
+        const id = req.params.id
+        const {name, sort} = req.query
+        const response = await favoriteService.getMusicService(id, name, sort)
         return res.status(200).json(response)
     } catch (error) {
         return res.status(500).json({

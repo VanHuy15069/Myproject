@@ -100,3 +100,22 @@ export const getVietNam = async (req, res) => {
         })
     }
 }
+
+export const getMusicOfNationName = async (req, res) => {
+    try {
+        const {nationName,limit, offset, name, sort} = req.query
+        if(!nationName){
+            return res.status(404).json({
+                err: 1,
+                msg: 'Full information is required'
+            })
+        }
+        const response = await nationService.getMusicOfNationNameService(nationName, limit, offset, name, sort)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(500).json({
+            err: -1,
+            msg: 'failure ' + error
+        })
+    }
+}

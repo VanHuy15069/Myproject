@@ -17,6 +17,7 @@ function SingerMusic() {
     const [text, setText] = useState('Nổi bật');
     const [singer, setSinger] = useState({});
     const [musics, setNewMusics] = useState([]);
+    const [sort, setSort] = useState('views');
     useEffect(() => {
         axios
             .get(`http://localhost:4000/api/singer/singerInfor/${params.id}`)
@@ -29,22 +30,25 @@ function SingerMusic() {
         axios
             .get(`http://localhost:4000/api/music/getBySinger/${params.id}`, {
                 params: {
-                    name: 'views',
+                    name: sort,
                 },
             })
             .then((res) => {
                 setNewMusics(res.data.response.rows);
+                setShow(false);
             })
             .catch(() => navigate('/error'));
-    }, [params.id, navigate]);
+    }, [params.id, navigate, sort]);
     const handleShowBox = () => {
         setShow(!show);
     };
     const handleSortView = () => {
         setText('Nổi bật');
+        setSort('views');
     };
     const handleSortCreatedAt = () => {
         setText('Mới nhất');
+        setSort('createdAt');
     };
     const handleAddSong = (song) => {
         const newList = [...musics];
@@ -84,6 +88,11 @@ function SingerMusic() {
                 </div>
             </div>
             <div className={cx('container')}>
+                <div className={cx('header')}>
+                    <p>Bài hát</p>
+                    <p>Phát hành</p>
+                    <p>Thời gian</p>
+                </div>
                 <div className={cx('list-music')}>
                     {musics.map((music, index) => {
                         return (
