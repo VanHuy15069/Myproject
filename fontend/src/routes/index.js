@@ -13,6 +13,8 @@ import UserPage from '~/Pages/UserPage/UserPage';
 import SingerMusic from '~/Pages/SingerMusic/SingerMusic';
 import NewMusic from '~/Pages/NewMusic/NewMusic';
 import Library from '~/Pages/Library/Library';
+import SingerLibrary from '~/Pages/SingerLibrary/SingerLibrary';
+import Category from '~/Pages/Category/Category';
 
 export const publicRouter = [
     { path: '/', component: Home },
@@ -21,10 +23,12 @@ export const publicRouter = [
     { path: '/singer/:id', component: Singer },
     { path: '/singer/:id/song', component: SingerMusic },
     { path: '/newMusic', component: NewMusic },
+    { path: '/category', component: Category },
 ];
 export const userRouter = [
     { path: '/user', component: UserPage },
     { path: '/library', component: Library },
+    { path: '/library/singer', component: SingerLibrary },
 ];
 export const adminRouter = [
     { path: '/admin', component: Admin },

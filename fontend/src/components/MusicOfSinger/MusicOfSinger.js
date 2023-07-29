@@ -11,7 +11,7 @@ import BoxMSG from '../BoxMSG/BoxMSG';
 import { saveAs } from 'file-saver';
 import PoperWrapper from '../PoperWrapper/PoperWrapper';
 const cx = classNames.bind(styles);
-function MusicOfSinger({ music, time, onClick }) {
+function MusicOfSinger({ music, time, onClick, favorite = false }) {
     const user = JSON.parse(localStorage.getItem('user'));
     const navigate = useNavigate();
     const [showMSG, setShowMSG] = useState(false);
@@ -20,7 +20,7 @@ function MusicOfSinger({ music, time, onClick }) {
     const [second, setSecond] = useState(0);
     const [isHeart, setIsHeart] = useState(false);
     const [showBox, setShowBox] = useState(false);
-    const [renderFavorite, setRenderFavorite] = useContext(Context);
+    const [, , , , renderFavorite, setRenderFavorite, songId] = useContext(Context);
     const formatDate = new Intl.DateTimeFormat('vi-VN', {
         day: '2-digit',
         month: '2-digit',
@@ -91,13 +91,36 @@ function MusicOfSinger({ music, time, onClick }) {
         const fileName = `${music.musicName}.mp3`;
         if (music.vip) {
             if (user) {
-                if (user.vip) saveAs(src, fileName);
-                else {
+                if (user.vip) {
+                    saveAs(src, fileName);
+                    if (!isHeart) {
+                        axios
+                            .post('http://localhost:4000/api/favorite/addFavorite', {
+                                userId: user.id,
+                                musicId: music.id,
+                            })
+                            .then(() => {
+                                setRenderFavorite(!renderFavorite);
+                            })
+                            .catch(() => navigate('/error'));
+                    }
+                } else {
                     setShowBox(true);
                 }
             } else setShowBox(true);
         } else {
             saveAs(src, fileName);
+            if (!isHeart) {
+                axios
+                    .post('http://localhost:4000/api/favorite/addFavorite', {
+                        userId: user.id,
+                        musicId: music.id,
+                    })
+                    .then(() => {
+                        setRenderFavorite(!renderFavorite);
+                    })
+                    .catch(() => navigate('/error'));
+            }
         }
     };
     const handleUpgrade = () => {
@@ -115,7 +138,7 @@ function MusicOfSinger({ music, time, onClick }) {
         } else navigate('/login');
     };
     return (
-        <div className={cx('wrapper')} onClick={onClick}>
+        <div className={cx('wrapper', { curentSong: songId === music.id, favorite: favorite })} onClick={onClick}>
             {music.musicLink && (
                 <audio src={`http://localhost:4000/src/${music.musicLink}`} onLoadedMetadata={handleLoad} />
             )}
@@ -127,13 +150,39 @@ function MusicOfSinger({ music, time, onClick }) {
                         </div>
                         <div className={cx('music-info')}>
                             <div className={cx('name')}>{music.musicName}</div>
-                            <div className={cx('singer')}>{music.singerInfo.singerName}</div>
+                            {favorite ? (
+                                <div
+                                    className={cx('singer', 'link-singer')}
+                                    onClick={(e) => {
+                                        navigate(`/singer/${music.singerInfo.id}`);
+                                        e.stopPropagation();
+                                    }}
+                                >
+                                    {music.singerInfo.singerName}
+                                </div>
+                            ) : (
+                                <div className={cx('singer')}>{music.singerInfo.singerName}</div>
+                            )}
                         </div>
                     </div>
                     {time && <div className={cx('time')}>{formatDate.format(Date.parse(music.createdAt))}</div>}
+                    {favorite && (
+                        <div className={cx('heart')}>
+                            {isHeart ? (
+                                <span className={cx('icon', 'added')} onClick={handleUnFavorite}>
+                                    {<FontAwesomeIcon icon={heartSolid} />}
+                                </span>
+                            ) : (
+                                <span className={cx('icon')} onClick={handleAddFavorite}>
+                                    {<FontAwesomeIcon icon={faHeart} />}
+                                </span>
+                            )}
+                        </div>
+                    )}
                     <div className={cx('duration')}>
                         {minute >= 10 ? minute : '0' + minute}:{second >= 10 ? second : '0' + second}
                     </div>
+
                     <div className={cx('action')}>
                         {isHeart ? (
                             <span className={cx('icon', 'added')} onClick={handleUnFavorite}>

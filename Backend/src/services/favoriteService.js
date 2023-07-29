@@ -1,4 +1,4 @@
-import db from "../models";
+import db, {sequelize} from "../models";
 
 export const addFavoriteService = (userId, musicId) =>
     new Promise(async(resolve, reject) => {

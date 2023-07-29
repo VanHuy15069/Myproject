@@ -7,3 +7,5 @@ export const top100USUK = require('./top100USUK.webp');
 export const top100KPop = require('./Top100Kpop.webp');
 export const top100EDM = require('./Top100EDM.webp');
 export const top100Violin = require('./Top100Violin.webp');
+export const top100 = require('./top100.jpg');
+export const topNewMusic = require('./newMusic.jpg');

@@ -1,8 +1,9 @@
 import classNames from 'classnames/bind';
 import styles from './SingerRandomItem.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faUserPlus } from '@fortawesome/free-solid-svg-icons';
-import { useState, useEffect } from 'react';
+import { faShuffle, faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import { Context } from '~/Provider/Provider';
+import { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 const cx = classNames.bind(styles);
@@ -11,6 +12,7 @@ function SingerRandomItem({ singer }) {
     const user = JSON.parse(localStorage.getItem('user'));
     const [follow, setFollow] = useState(0);
     const [isFollow, setIsFollow] = useState(false);
+    const [isRender, setIsRender] = useContext(Context);
     useEffect(() => {
         if (user && singer.id) {
             axios
@@ -35,6 +37,20 @@ function SingerRandomItem({ singer }) {
             behavior: 'smooth',
         });
     };
+    const handleGetMusic = () => {
+        axios
+            .get(`http://localhost:4000/api/music/getBySinger/${singer.id}`, {
+                params: {
+                    name: 'createdAt',
+                    sort: 'DESC',
+                },
+            })
+            .then((res) => {
+                localStorage.setItem('listMusic', JSON.stringify(res.data.response.rows));
+                setIsRender(!isRender);
+            })
+            .catch(() => navigate('/error'));
+    };
     return (
         <div className={cx('wrapper')}>
             <Link to={`/singer/${singer.id}`}>
@@ -52,11 +68,11 @@ function SingerRandomItem({ singer }) {
             </div>
             <div className={cx('btn')}>
                 {isFollow ? (
-                    <button className={cx('follow-btn', 'followed')}>
+                    <button className={cx('follow-btn', 'followed')} onClick={handleGetMusic}>
                         <span className={cx('icon')}>
-                            <FontAwesomeIcon icon={faCheck} />
+                            <FontAwesomeIcon icon={faShuffle} />
                         </span>
-                        Đã quan tâm
+                        Góc nhạc
                     </button>
                 ) : (
                     <button className={cx('follow-btn')}>

@@ -3,13 +3,14 @@ import * as nationService from '../services/nationService'
 export const addNaion = async (req, res) => {
     try {
         const nationName = req.body.nationName
-        if(!nationName){
+        const image = req.file.filename
+        if(!nationName || !image){
             return res.status(404).json({
                 err: 1,
                 msg: 'Full information is required'
             })
         }
-        const response = await nationService.addNaionService(nationName)
+        const response = await nationService.addNaionService(nationName, image)
         return res.status(200).json(response)
     } catch (error) {
         return res.status(500).json({
@@ -54,6 +55,26 @@ export const updateNation = async (req, res) => {
             })
         }
         const response = await nationService.updateNationService(id, nationName)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(500).json({
+            err: -1,
+            msg: 'failure ' + error
+        })
+    }
+}
+
+export const updateImage = async(req, res) => {
+    try {
+        const id = req.params.id
+        const image = req.file.filename
+        if(!image){
+            return res.status(404).json({
+                err: 1,
+                msg: 'Full information is required'
+            })
+        }
+        const response = await nationService.updateImageService(id, image)
         return res.status(200).json(response)
     } catch (error) {
         return res.status(500).json({

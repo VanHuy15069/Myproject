@@ -81,7 +81,7 @@ function AdminMusic() {
         axios
             .get('http://localhost:4000/api/topic/getAll')
             .then((res) => {
-                setTopics(res.data.response);
+                setTopics(res.data.response.rows);
             })
             .catch(() => navigate('/error'));
     }, [navigate]);
@@ -197,7 +197,9 @@ function AdminMusic() {
     };
     const handleChangeImage = (e) => {
         setImage(e.target.files[0]);
-        setImgUpload(URL.createObjectURL(e.target.files[0]));
+        if (e.target.files[0]) {
+            setImgUpload(URL.createObjectURL(e.target.files[0]));
+        }
     };
     const handleChangeLink = (e) => {
         setLinkMusic(e.target.files[0]);
@@ -254,7 +256,6 @@ function AdminMusic() {
                         setImage();
                         setLinkMusic();
                         setDataSelcet({ categoryId: categories[0].id, topicId: topics[0].id, nationId: nations[0].id });
-
                         setShowMSG(true);
                         setMsg('Thêm bài hát thành công');
                         setRender(!render);

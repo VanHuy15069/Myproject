@@ -1,11 +1,15 @@
 import db from "../models";
-
-export const addCategoryService = (title) =>
+import path from "path";
+import fs from 'fs'
+export const addCategoryService = (title, image) =>
     new Promise(async(resolve, reject) => {
         try {
             const [category, created] = await db.Category.findOrCreate({
                 where: {categoryName: title},
-                defaults: {categoryName: title}
+                defaults: {
+                    categoryName: title,
+                    image: image
+                }
             })
             if(!created){
                 resolve({
@@ -42,6 +46,29 @@ export const updateCategoryService = (categoryName, id) =>
             reject(error)
         }
     })
+
+export const updateImageService = (img, id) => 
+    new Promise(async(resolve, reject) => {
+        try {
+            const image = await db.Category.findByPk(id)
+            if(!image){
+                resolve({
+                    err: 2,
+                    msg: 'This data does not exist'
+                })
+            }
+            const clearImg = path.resolve(__dirname, '..', '', `public/Images/${image.image}`);
+            await image.update({image: img})
+            fs.unlinkSync(clearImg)
+            resolve({
+                err: 0,
+                msg: 'Update successful'
+            })
+        } catch (error) {
+            reject(error)
+        }
+    })
+
 export const deleteCategoryService = (id) =>
     new Promise(async (resolve, reject) => {
         try {
@@ -52,7 +79,9 @@ export const deleteCategoryService = (id) =>
                     msg: 'This data does not exist'
                 })
             }
+            const clearImg = path.resolve(__dirname, '..', '', `public/Images/${category.image}`);
             await category.destroy()
+            fs.unlinkSync(clearImg)
             resolve({
                 err: 0,
                 msg: 'Delete successful'
@@ -62,10 +91,30 @@ export const deleteCategoryService = (id) =>
         }
     })
 
-export const getCategoryService = () => 
+export const getCategoryService = (limit, name, sort) => 
     new Promise(async (resolve, reject) => {
         try {
-            const categories = await db.Category.findAll()
+            const queries = {}
+            if(limit) queries.limit = Number(limit)
+            if(!name) name = 'createdAt'
+            if(!sort) sort = 'DESC'
+            const categories = await db.Category.findAll({
+                include: [
+                    {
+                        model: db.Music,
+                        as: 'musicInfo',
+                        ...queries,
+                        order: [[name, sort]],
+                        include: [
+                            {
+                                model: db.Singer,
+                                as: 'singerInfo',
+                                attributes: ['id', 'singerName']
+                            }
+                        ]
+                    }
+                ]
+            })
             resolve({
                 response: categories,
                 err: 0,

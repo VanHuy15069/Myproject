@@ -25,7 +25,7 @@ function Audio() {
     const user = JSON.parse(localStorage.getItem('user'));
     const playList = JSON.parse(localStorage.getItem('listMusic'));
     const navigate = useNavigate();
-    const [render, , renderFavorite, setRenderFavorite] = useContext(Context);
+    const [render, , , , renderFavorite, setRenderFavorite, , setSongId] = useContext(Context);
     const audioRef = useRef();
     const volumRef = useRef();
     const musicRef = useRef();
@@ -148,13 +148,36 @@ function Audio() {
         const fileName = `${currentSong.musicName}.mp3`;
         if (currentSong.vip) {
             if (user) {
-                if (user.vip) saveAs(src, fileName);
-                else {
+                if (user.vip) {
+                    saveAs(src, fileName);
+                    if (!isHeart) {
+                        axios
+                            .post('http://localhost:4000/api/favorite/addFavorite', {
+                                userId: user.id,
+                                musicId: currentSong.id,
+                            })
+                            .then(() => {
+                                setRenderFavorite(!renderFavorite);
+                            })
+                            .catch(() => navigate('/error'));
+                    }
+                } else {
                     setShowBox(true);
                 }
             } else setShowBox(true);
         } else {
             saveAs(src, fileName);
+            if (!isHeart) {
+                axios
+                    .post('http://localhost:4000/api/favorite/addFavorite', {
+                        userId: user.id,
+                        musicId: currentSong.id,
+                    })
+                    .then(() => {
+                        setRenderFavorite(!renderFavorite);
+                    })
+                    .catch(() => navigate('/error'));
+            }
         }
     };
     const handleUnFavorite = () => {
@@ -203,6 +226,7 @@ function Audio() {
     useEffect(() => {
         if (playList) {
             setCurrentSong(playList[0]);
+            // setSongId([playList[0].id])
             setListMusic(playList);
         } else {
             axios
@@ -216,6 +240,7 @@ function Audio() {
                 .then((res) => {
                     setListMusic(res.data.response);
                     setCurrentSong(res.data.response[0]);
+                    // setSongId(res.data.response[0].id)
                 })
                 .catch((err) => {
                     console.log(err);
@@ -233,7 +258,7 @@ function Audio() {
                     },
                 })
                 .then((res) => setIsHeart(res.data.response))
-                .catch(() => navigate('/error'));
+                .catch((err) => console.log(err));
         }
     }, [currentSong, navigate, renderFavorite, user]);
     useEffect(() => {
@@ -245,6 +270,10 @@ function Audio() {
         }
         return () => clearTimeout(timer);
     }, [showMSG]);
+    useEffect(() => {
+        setSongId(currentSong.id);
+    }, [currentSong, setSongId]);
+
     return (
         <div className={cx('wrapper')}>
             {currentSong.musicLink && (
@@ -309,7 +338,6 @@ function Audio() {
                                 <FontAwesomeIcon icon={faShuffle} />
                             </span>
                         )}
-
                         <span className={cx('icon')}>
                             <FontAwesomeIcon icon={faBackwardStep} onClick={handlePrev} />
                         </span>

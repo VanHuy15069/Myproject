@@ -76,20 +76,22 @@ function BoxUser({ user }) {
             <div className={cx('line')}></div>
             <div className={cx('user-setting')}>
                 <div className={cx('title')}>Cá nhân</div>
-                <div className={cx('menu-item')}>
-                    <span className={cx('icon')}>
-                        <FontAwesomeIcon icon={faUser} />
-                    </span>
-                    <Link to={`/user`}>
+                <Link to={`/user`}>
+                    <div className={cx('menu-item')}>
+                        <span className={cx('icon')}>
+                            <FontAwesomeIcon icon={faUser} />
+                        </span>
                         <p className={cx('text')}>Thông tin cá nhân</p>
-                    </Link>
-                </div>
-                <div className={cx('menu-item')}>
-                    <span className={cx('icon')}>
-                        <FontAwesomeIcon icon={faHeadphones} />
-                    </span>
-                    <p className={cx('text')}>Thư viện của bạn</p>
-                </div>
+                    </div>
+                </Link>
+                <Link to={'/library'}>
+                    <div className={cx('menu-item')}>
+                        <span className={cx('icon')}>
+                            <FontAwesomeIcon icon={faHeadphones} />
+                        </span>
+                        <p className={cx('text')}>Thư viện của bạn</p>
+                    </div>
+                </Link>
             </div>
             <div className={cx('line')}></div>
             <div className={cx('menu-item')} onClick={handleLogout}>

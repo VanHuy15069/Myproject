@@ -3,8 +3,27 @@
     width: 100%;
 }
 .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     margin-bottom: 20px;
     font-size: 2rem;
+}
+.navigation {
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: hsla(0, 0%, 100%, 0.5);
+    cursor: pointer;
+    &:hover {
+        color: #c273ed;
+    }
+}
+.icon {
+    font-size: 1.6rem;
+    margin-left: 6px;
 }
 .list {
     display: flex;

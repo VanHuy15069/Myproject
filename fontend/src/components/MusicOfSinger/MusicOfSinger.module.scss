@@ -4,6 +4,15 @@
     border-bottom: 1px solid hsla(0, 0%, 100%, 0.05);
     user-select: none;
     cursor: pointer;
+    &.curentSong {
+        background-color: hsla(0, 0%, 100%, 0.1);
+    }
+    &.favorite:hover .duration {
+        display: block;
+    }
+    &.favorite:hover .action {
+        display: none;
+    }
     &:hover {
         background-color: hsla(0, 0%, 100%, 0.1);
     }
@@ -56,6 +65,16 @@
     font-size: 1.4rem;
     font-weight: 500;
 }
+.singer.link-singer {
+    width: fit-content;
+    &:hover {
+        color: #c273ed;
+        text-decoration: underline;
+    }
+}
+.favorite .duration {
+    flex: none;
+}
 .duration {
     text-align: right;
     flex: 2;
@@ -68,6 +87,11 @@
 }
 .time {
     flex: 2;
+}
+.heart .icon {
+    height: 38px;
+    width: 38px;
+    font-size: 1.4rem;
 }
 .icon {
     display: flex;

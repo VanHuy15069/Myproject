@@ -112,19 +112,24 @@ function Singer() {
     const handleAddSong = (song) => {
         const newList = [...outstandingMusic];
         const index = outstandingMusic.indexOf(song);
-        newList.splice(index, 1);
-        newList.unshift(song);
-        localStorage.setItem('listMusic', JSON.stringify(newList));
+        const afterList = newList.slice(index);
+        newList.splice(index, newList.length - index);
+        const listMusic = afterList.concat(newList);
+        localStorage.setItem('listMusic', JSON.stringify(listMusic));
         setIsRender(!isRender);
     };
     const handleAddSongNew = (song) => {
         const newList = [...outstandingMusic];
         const index = outstandingMusic.findIndex((obj) => obj.id === song.id);
         if (index !== -1) {
-            newList.splice(index, 1);
+            const afterList = newList.slice(index);
+            newList.splice(index, newList.length - index);
+            const listMusic = afterList.concat(newList);
+            localStorage.setItem('listMusic', JSON.stringify(listMusic));
+        } else {
+            newList.unshift(song);
+            localStorage.setItem('listMusic', JSON.stringify(newList));
         }
-        newList.unshift(song);
-        localStorage.setItem('listMusic', JSON.stringify(newList));
         setIsRender(!isRender);
     };
     return (

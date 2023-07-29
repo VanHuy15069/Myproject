@@ -2,13 +2,17 @@ import classNames from 'classnames/bind';
 import styles from './Library.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
-import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Context } from '~/Provider/Provider';
+import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import MusicOfSinger from '~/components/MusicOfSinger/MusicOfSinger';
 const cx = classNames.bind(styles);
 function Library() {
     const user = JSON.parse(localStorage.getItem('user'));
+    const navigate = useNavigate();
+    const [isRender, setIsRender] = useContext(Context);
     const [singers, setSingers] = useState([]);
     const [musics, setMusics] = useState([]);
     useEffect(() => {
@@ -31,6 +35,15 @@ function Library() {
             })
             .catch((err) => console.log(err));
     }, [user.id]);
+    const handleAddSong = (song, musics) => {
+        const newList = [...musics];
+        const index = musics.indexOf(song);
+        const afterList = newList.slice(index);
+        newList.splice(index, newList.length - index);
+        const listMusic = afterList.concat(newList);
+        localStorage.setItem('listMusic', JSON.stringify(listMusic));
+        setIsRender(!isRender);
+    };
     const favoriteMusic = musics.sort((a, b) => a.musicName.localeCompare(b.musicName));
     return (
         <div className={cx('wrapper')}>
@@ -53,7 +66,7 @@ function Library() {
                     })}
                     {singers.length > 0 && (
                         <div className={cx('singer-item')}>
-                            <div className={cx('box')}>
+                            <div className={cx('box')} onClick={() => navigate('/library/singer')}>
                                 <span className={cx('icon')}>
                                     <FontAwesomeIcon icon={faArrowRight} />
                                 </span>
@@ -69,7 +82,14 @@ function Library() {
                     </div>
                     <div className={cx('list-music')}>
                         {favoriteMusic.map((music, index) => {
-                            return <MusicOfSinger key={index} music={music} />;
+                            return (
+                                <MusicOfSinger
+                                    key={index}
+                                    music={music}
+                                    onClick={() => handleAddSong(music, favoriteMusic)}
+                                    favorite
+                                />
+                            );
                         })}
                     </div>
                 </div>

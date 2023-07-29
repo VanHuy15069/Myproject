@@ -59,10 +59,26 @@ export const detailTopicService = (id, limit, offset, name, sort) =>
         }
     })
 
-export const getAllTopicService = () =>
+export const getAllTopicService = (limit, name, sort, topicLimit) =>
     new Promise(async(resolve, reject) => {
+        const query = {}
+        if(!limit) limit = 3
+        if(!name) name = 'createdAt'
+        if(!sort) sort = 'DESC'
+        if(topicLimit) query.limit = Number(topicLimit)
         try {
-            const topic = await db.Topic.findAll()
+            const topic = await db.Topic.findAndCountAll({
+                ...query,
+                include: [
+                    {
+                        model: db.Music,
+                        as: 'musicInfo',
+                        limit: Number(limit),
+                        order: [[name, sort]],
+                        attributes: ['image']
+                    }
+                ]
+            })
             resolve({
                 response: topic,
                 err: 0,

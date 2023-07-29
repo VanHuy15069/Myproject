@@ -35,7 +35,8 @@ export const detailTopic = async (req, res) => {
 
 export const getAllTopic = async (req, res) => {
     try {
-        const response = await topicService.getAllTopicService()
+        const {limit, name, sort, topicLimit} = req.query
+        const response = await topicService.getAllTopicService(limit, name, sort, topicLimit)
         return res.status(200).json(response)
     } catch (error) {
         return res.status(500).json({

@@ -43,7 +43,9 @@ function AdminSlider() {
     }, [render]);
     const handleChangeImage = (e) => {
         setImage(e.target.files[0]);
-        setImgUpload(URL.createObjectURL(e.target.files[0]));
+        if (e.target.files[0]) {
+            setImgUpload(URL.createObjectURL(e.target.files[0]));
+        }
     };
     const handleSlide = (e) => {
         e.preventDefault();

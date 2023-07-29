@@ -30,7 +30,7 @@ function AdminTopics() {
         axios
             .get('http://localhost:4000/api/topic/getAll')
             .then((res) => {
-                setTopics(res.data.response);
+                setTopics(res.data.response.rows);
             })
             .catch(() => navigate('/error'));
     }, [render, navigate]);
@@ -40,15 +40,19 @@ function AdminTopics() {
         };
     }, [imgUpload]);
     useEffect(() => {
+        let timer;
         if (showMSG) {
-            setTimeout(() => {
+            timer = setTimeout(() => {
                 setShowMSG(false);
             }, 3000);
         }
+        return () => clearTimeout(timer);
     }, [showMSG]);
     const handleChangeImg = (e) => {
         setImage(e.target.files[0]);
-        setImgUpload(URL.createObjectURL(e.target.files[0]));
+        if (e.target.files[0]) {
+            setImgUpload(URL.createObjectURL(e.target.files[0]));
+        }
     };
     const handleChangeTitle = (e) => {
         setTitle(e.target.value);
@@ -78,12 +82,17 @@ function AdminTopics() {
                 axios
                     .post('http://localhost:4000/api/topic/addTopic', formData)
                     .then((res) => {
-                        setImgUpload();
-                        setRender(!render);
-                        setShowBox(false);
-                        setShowMSG(true);
-                        setMsg('Thêm chủ đề thành công!');
-                        setCheck('');
+                        if (res.data.err === 0) {
+                            setImgUpload();
+                            setRender(!render);
+                            setShowBox(false);
+                            setShowMSG(true);
+                            setTitle('');
+                            setMsg('Thêm chủ đề thành công!');
+                            setCheck('');
+                        } else if (res.data.err === 2) {
+                            setCheck('Chủ đề này đã tồn tại!');
+                        }
                     })
                     .catch((err) => console.log(err));
             }

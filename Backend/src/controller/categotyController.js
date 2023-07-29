@@ -3,13 +3,14 @@ import * as categoryService from '../services/categoryService'
 export const addCategory = async (req, res) => {
     try {
         const title = req.body.categoryName
-        if(!title){
+        const image = req.file.filename
+        if(!title || !image){
             return res.status(404).json({
                 err: 1,
                 msg: 'Full information is required'
             })
         }
-        const response = await categoryService.addCategoryService(title)
+        const response = await categoryService.addCategoryService(title, image)
         return res.status(200).json(response)
     } catch (error) {
         return res.status(500).json({
@@ -39,6 +40,26 @@ export const updateCategory = async (req, res) => {
     }
 }
 
+export const updateImage = async(req, res) => {
+    try {
+        const image = req.file.filename
+        const id = req.params.id
+        if(!image){
+            return res.status(404).json({
+                err: 1,
+                msg: 'Full information is required'
+            })
+        }
+        const response = await categoryService.updateImageService(image, id)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(500).json({
+            err: -1,
+            msg: 'failure ' + error
+        })
+    }
+}
+
 export const deleteCategory = async (req, res) => {
     try {
         const id = req.params.id
@@ -54,10 +75,11 @@ export const deleteCategory = async (req, res) => {
 
 export const getCategory = async (req, res) => {
     try {
-        const response = await categoryService.getCategoryService()
+        const {limit, name, sort} = req.query
+        const response = await categoryService.getCategoryService(limit, name, sort)
         return res.status(200).json(response)
     } catch (error) {
-        return res.status.json({
+        return res.status(500).json({
             err: -1,
             msg: 'failure ' + error
         })

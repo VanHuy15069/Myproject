@@ -20,7 +20,7 @@
     padding: 16px;
     cursor: pointer;
     &:hover .img {
-        transform: scale(1.2);
+        transform: scale(1.1);
     }
 }
 .image-box {
@@ -30,7 +30,7 @@
     overflow: hidden;
 }
 .img {
-    transition: transform linear 0.5s;
+    transition: transform ease-out 0.5s;
     height: 100%;
     width: 100%;
     object-fit: cover;

@@ -17,6 +17,7 @@ function UserPage() {
     const [showMSG, setShowMSG] = useState(false);
     const [msg, setMsg] = useState('');
     const [imgUpload, setImgUpload] = useState();
+    const [changed, setChanged] = useState(false);
     const [image, setImage] = useState();
     const [check, setCheck] = useState('');
     const [active, setActive] = useState({
@@ -37,13 +38,16 @@ function UserPage() {
     const { oldPassword, newPassword, checkPassword } = password;
     const handleChange = (e) => {
         setData({ ...data, [e.target.name]: e.target.value });
+        setChanged(true);
     };
     const handleChangePassword = (e) => {
         setPassword({ ...password, [e.target.name]: e.target.value });
     };
     const handleChangeImage = (e) => {
         setImage(e.target.files[0]);
-        setImgUpload(URL.createObjectURL(e.target.files[0]));
+        if (e.target.files[0]) {
+            setImgUpload(URL.createObjectURL(e.target.files[0]));
+        }
     };
     const handleChangeInfo = () => {
         axios
@@ -181,9 +185,13 @@ function UserPage() {
                                     name="email"
                                 />
                             </div>
-                            <div className={cx('button')} onClick={handleChangeInfo}>
-                                Thay đổi thông tin
-                            </div>
+                            {changed ? (
+                                <div className={cx('button')} onClick={handleChangeInfo}>
+                                    Thay đổi thông tin
+                                </div>
+                            ) : (
+                                <div className={cx('button', 'old')}>Thay đổi thông tin</div>
+                            )}
                         </div>
                     )}
                     {active.avata && (

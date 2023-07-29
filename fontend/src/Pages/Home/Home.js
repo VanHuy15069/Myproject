@@ -30,7 +30,7 @@ function Home() {
     const [newMusics, setNewMusics] = useState([]);
     const [newMusicQT, setNewMusicQT] = useState([]);
     const [singerPopular, setSingerPopular] = useState([]);
-    const [isRender, setIsRender] = useContext(Context);
+    const [isRender, setIsRender, , , , , songId] = useContext(Context);
     const [active, setActive] = useState({
         all: true,
         vn: false,
@@ -48,7 +48,7 @@ function Home() {
         axios
             .get('http://localhost:4000/api/music/getAllMusic', {
                 params: {
-                    limit: 15,
+                    limit: 12,
                     name: 'createdAt',
                     sort: 'DESC',
                 },
@@ -62,7 +62,7 @@ function Home() {
     useEffect(() => {
         axios
             .get('http://localhost:4000/api/nation/getVietNam', {
-                params: { limit: 15 },
+                params: { limit: 12 },
             })
             .then((res) => {
                 if (res.data.err === 0) {
@@ -74,7 +74,7 @@ function Home() {
     useEffect(() => {
         axios
             .get('http://localhost:4000/api/nation/getInternational', {
-                params: { limit: 15 },
+                params: { limit: 12 },
             })
             .then((res) => {
                 if (res.data.err === 0) {
@@ -177,10 +177,12 @@ function Home() {
     const handleAddSong = (song) => {
         const newList = [...newMusics];
         const index = newMusics.indexOf(song);
-        newList.splice(index, 1);
-        newList.unshift(song);
-        localStorage.setItem('listMusic', JSON.stringify(newList));
+        const afterList = newList.slice(index);
+        newList.splice(index, newList.length - index);
+        const listMusic = afterList.concat(newList);
+        localStorage.setItem('listMusic', JSON.stringify(listMusic));
         setIsRender(!isRender);
+        console.log(songId);
     };
     return (
         <div className={cx('wrapper')}>
@@ -238,7 +240,7 @@ function Home() {
                 <div className={cx('list')}>
                     {newMusics.map((music, index) => {
                         return (
-                            <div key={index} className={cx('item')}>
+                            <div key={index} className={cx('item', { curentSong: music.id === songId })}>
                                 <MusicItemSmall music={music} onClick={() => handleAddSong(music)} />
                             </div>
                         );

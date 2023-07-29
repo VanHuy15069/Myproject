@@ -68,7 +68,9 @@ function AdminSinger() {
     };
     const handleChangeIMG = (e) => {
         setImage(e.target.files[0]);
-        setUploadImage(URL.createObjectURL(e.target.files[0]));
+        if (e.target.files[0]) {
+            setUploadImage(URL.createObjectURL(e.target.files[0]));
+        }
     };
     const handleShowUpdate = (singer) => {
         setId(singer.id);

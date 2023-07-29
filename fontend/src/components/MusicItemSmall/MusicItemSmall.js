@@ -81,13 +81,36 @@ function MusicItemSmall({ music, onClick }) {
         const fileName = `${music.musicName}.mp3`;
         if (music.vip) {
             if (user) {
-                if (user.vip) saveAs(src, fileName);
-                else {
+                if (user.vip) {
+                    saveAs(src, fileName);
+                    if (!isHeart) {
+                        axios
+                            .post('http://localhost:4000/api/favorite/addFavorite', {
+                                userId: user.id,
+                                musicId: music.id,
+                            })
+                            .then(() => {
+                                setRenderFavorite(!renderFavorite);
+                            })
+                            .catch(() => navigate('/error'));
+                    }
+                } else {
                     setShowBox(true);
                 }
             } else setShowBox(true);
         } else {
             saveAs(src, fileName);
+            if (!isHeart) {
+                axios
+                    .post('http://localhost:4000/api/favorite/addFavorite', {
+                        userId: user.id,
+                        musicId: music.id,
+                    })
+                    .then(() => {
+                        setRenderFavorite(!renderFavorite);
+                    })
+                    .catch(() => navigate('/error'));
+            }
         }
     };
     const handleUpgrade = () => {

@@ -48,9 +48,10 @@ function NewMusic() {
     const handleAddSong = (song, musics) => {
         const newList = [...musics];
         const index = musics.indexOf(song);
-        newList.splice(index, 1);
-        newList.unshift(song);
-        localStorage.setItem('listMusic', JSON.stringify(newList));
+        const afterList = newList.slice(index);
+        newList.splice(index, newList.length - index);
+        const listMusic = afterList.concat(newList);
+        localStorage.setItem('listMusic', JSON.stringify(listMusic));
         setIsRender(!isRender);
     };
     const getAll = () => {

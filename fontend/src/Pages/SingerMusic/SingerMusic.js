@@ -35,7 +35,6 @@ function SingerMusic() {
             })
             .then((res) => {
                 setNewMusics(res.data.response.rows);
-                setShow(false);
             })
             .catch(() => navigate('/error'));
     }, [params.id, navigate, sort]);
@@ -45,17 +44,20 @@ function SingerMusic() {
     const handleSortView = () => {
         setText('Nổi bật');
         setSort('views');
+        setShow(false);
     };
     const handleSortCreatedAt = () => {
         setText('Mới nhất');
         setSort('createdAt');
+        setShow(false);
     };
     const handleAddSong = (song) => {
         const newList = [...musics];
         const index = musics.indexOf(song);
-        newList.splice(index, 1);
-        newList.unshift(song);
-        localStorage.setItem('listMusic', JSON.stringify(newList));
+        const afterList = newList.slice(index);
+        newList.splice(index, newList.length - index);
+        const listMusic = afterList.concat(newList);
+        localStorage.setItem('listMusic', JSON.stringify(listMusic));
         setIsRender(!isRender);
     };
     useEffect(() => {
