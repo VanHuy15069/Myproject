@@ -30,7 +30,7 @@ function Home() {
     const [newMusics, setNewMusics] = useState([]);
     const [newMusicQT, setNewMusicQT] = useState([]);
     const [singerPopular, setSingerPopular] = useState([]);
-    const [isRender, setIsRender, , , , , songId] = useContext(Context);
+    const [isRender, setIsRender] = useContext(Context);
     const [active, setActive] = useState({
         all: true,
         vn: false,
@@ -182,7 +182,6 @@ function Home() {
         const listMusic = afterList.concat(newList);
         localStorage.setItem('listMusic', JSON.stringify(listMusic));
         setIsRender(!isRender);
-        console.log(songId);
     };
     return (
         <div className={cx('wrapper')}>
@@ -240,7 +239,7 @@ function Home() {
                 <div className={cx('list')}>
                     {newMusics.map((music, index) => {
                         return (
-                            <div key={index} className={cx('item', { curentSong: music.id === songId })}>
+                            <div key={index} className={cx('item')}>
                                 <MusicItemSmall music={music} onClick={() => handleAddSong(music)} />
                             </div>
                         );
@@ -271,6 +270,7 @@ function Home() {
                                 key={index}
                                 image={`http://localhost:4000/src/${singer.singerInfo.image}`}
                                 desc={`Top những bài hát hay nhất của ${singer.singerInfo.singerName}`}
+                                link={`/singer/${singer.singerInfo.id}/song`}
                             />
                         );
                     })}

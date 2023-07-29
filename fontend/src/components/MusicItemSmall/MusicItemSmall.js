@@ -11,9 +11,9 @@ import axios from 'axios';
 import BoxMSG from '../BoxMSG/BoxMSG';
 import PoperWrapper from '../PoperWrapper/PoperWrapper';
 const cx = classNames.bind(styles);
-function MusicItemSmall({ music, onClick }) {
+function MusicItemSmall({ music, onClick, time = false }) {
     const user = JSON.parse(localStorage.getItem('user'));
-    const [renderFavorite, setRenderFavorite] = useContext(Context);
+    const [, , , , renderFavorite, setRenderFavorite, songId] = useContext(Context);
     const navigate = useNavigate();
     const formatDate = new Intl.DateTimeFormat('vi-VN', {
         day: '2-digit',
@@ -128,7 +128,7 @@ function MusicItemSmall({ music, onClick }) {
         } else navigate('/login');
     };
     return (
-        <div className={cx('wrapper')} onClick={onClick}>
+        <div className={cx('wrapper', { curentSong: music.id === songId })} onClick={onClick}>
             <div className={cx('container')}>
                 <img className={cx('img')} src={`http://localhost:4000/src/${music.image}`} alt="" />
                 <div className={cx('content')}>
@@ -141,7 +141,7 @@ function MusicItemSmall({ music, onClick }) {
                             {music.singerInfo.singerName}
                         </Link>
                     </p>
-                    <p className={cx('text')}>{formatDate.format(Date.parse(music.createdAt))}</p>
+                    {!time && <p className={cx('text')}>{formatDate.format(Date.parse(music.createdAt))}</p>}
                 </div>
             </div>
             <div className={cx('action')}>

@@ -15,6 +15,8 @@ import NewMusic from '~/Pages/NewMusic/NewMusic';
 import Library from '~/Pages/Library/Library';
 import SingerLibrary from '~/Pages/SingerLibrary/SingerLibrary';
 import Category from '~/Pages/Category/Category';
+import TopNewMusic from '~/Pages/TopNewMusic/TopNewMusic';
+import CategoryItem from '~/Pages/CategoryItem/CategoryItem';
 
 export const publicRouter = [
     { path: '/', component: Home },
@@ -24,6 +26,8 @@ export const publicRouter = [
     { path: '/singer/:id/song', component: SingerMusic },
     { path: '/newMusic', component: NewMusic },
     { path: '/category', component: Category },
+    { path: '/rating', component: TopNewMusic },
+    { path: '/category/:id', component: CategoryItem },
 ];
 export const userRouter = [
     { path: '/user', component: UserPage },

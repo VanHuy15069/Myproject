@@ -160,6 +160,7 @@ function Category() {
                                 key={index}
                                 title={category.categoryName}
                                 music={category.musicInfo}
+                                onClick={() => navigate(`/category/${category.id}`)}
                                 navigation
                             />
                         );

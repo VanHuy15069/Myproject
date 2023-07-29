@@ -17,4 +17,5 @@ const musicRouter = express.Router()
     musicRouter.get('/getOfWeek', musicController.getOfWeekly)
     musicRouter.get('/getMusic/:id', musicController.getOneMusic)
     musicRouter.get('/getMusicFavorite/:id', musicController.favorite)
+    musicRouter.get('/getTopNewMusic', musicController.getTopNewMusic)
 export default musicRouter

@@ -85,3 +85,16 @@ export const getCategory = async (req, res) => {
         })
     }
 }
+
+export const getOneCategory = async(req, res) => {
+    try {
+        const id = req.params.id
+        const response = await categoryService.getOneCategoryService(id)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(500).json({
+            err: -1,
+            msg: 'failure ' + error
+        })
+    }
+}

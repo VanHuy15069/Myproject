@@ -6,7 +6,7 @@ import { Context } from '~/Provider/Provider';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 const cx = classNames.bind(styles);
-function ListMusic({ music, title, navigation = false }) {
+function ListMusic({ music, title, navigation = false, onClick }) {
     const [isRender, setIsRender] = useContext(Context);
     const handleAddSong = (song) => {
         const newList = [...music];
@@ -24,7 +24,7 @@ function ListMusic({ music, title, navigation = false }) {
                     <div className={cx('header')}>
                         <h3 className={cx('title')}>{title}</h3>
                         {navigation && (
-                            <div className={cx('navigation')}>
+                            <div className={cx('navigation')} onClick={onClick}>
                                 <p className={cx('text')}>Tất cả</p>
                                 <span className={cx('icon')}>
                                     <FontAwesomeIcon icon={faChevronRight} />

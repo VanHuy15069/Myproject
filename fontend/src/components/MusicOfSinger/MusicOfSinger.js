@@ -11,7 +11,7 @@ import BoxMSG from '../BoxMSG/BoxMSG';
 import { saveAs } from 'file-saver';
 import PoperWrapper from '../PoperWrapper/PoperWrapper';
 const cx = classNames.bind(styles);
-function MusicOfSinger({ music, time, onClick, favorite = false }) {
+function MusicOfSinger({ music, time = false, favorite = false, index, list, hotSong = false }) {
     const user = JSON.parse(localStorage.getItem('user'));
     const navigate = useNavigate();
     const [showMSG, setShowMSG] = useState(false);
@@ -20,7 +20,7 @@ function MusicOfSinger({ music, time, onClick, favorite = false }) {
     const [second, setSecond] = useState(0);
     const [isHeart, setIsHeart] = useState(false);
     const [showBox, setShowBox] = useState(false);
-    const [, , , , renderFavorite, setRenderFavorite, songId] = useContext(Context);
+    const [isRender, setIsRender, , , renderFavorite, setRenderFavorite, songId] = useContext(Context);
     const formatDate = new Intl.DateTimeFormat('vi-VN', {
         day: '2-digit',
         month: '2-digit',
@@ -56,6 +56,15 @@ function MusicOfSinger({ music, time, onClick, favorite = false }) {
                 .catch(() => navigate('/error'));
         }
     }, [navigate, user, music.id, renderFavorite]);
+    const handleAddSong = () => {
+        const newList = [...list];
+        const index = list.indexOf(music);
+        const afterList = newList.slice(index);
+        newList.splice(index, newList.length - index);
+        const listMusic = afterList.concat(newList);
+        localStorage.setItem('listMusic', JSON.stringify(listMusic));
+        setIsRender(!isRender);
+    };
     const handleAddFavorite = (e) => {
         e.stopPropagation();
         if (user) {
@@ -138,9 +147,17 @@ function MusicOfSinger({ music, time, onClick, favorite = false }) {
         } else navigate('/login');
     };
     return (
-        <div className={cx('wrapper', { curentSong: songId === music.id, favorite: favorite })} onClick={onClick}>
+        <div
+            className={cx('wrapper', { curentSong: songId === music.id, favorite: favorite, hotSong: hotSong })}
+            onClick={handleAddSong}
+        >
             {music.musicLink && (
                 <audio src={`http://localhost:4000/src/${music.musicLink}`} onLoadedMetadata={handleLoad} />
+            )}
+            {index && (
+                <span className={cx('number', { one: index === 1, two: index === 2, three: index === 3 })}>
+                    {index}
+                </span>
             )}
             <div className={cx('container')}>
                 <div className={cx('content')}>
@@ -149,20 +166,18 @@ function MusicOfSinger({ music, time, onClick, favorite = false }) {
                             <img src={`http://localhost:4000/src/${music.image}`} alt="" />
                         </div>
                         <div className={cx('music-info')}>
-                            <div className={cx('name')}>{music.musicName}</div>
-                            {favorite ? (
-                                <div
-                                    className={cx('singer', 'link-singer')}
-                                    onClick={(e) => {
-                                        navigate(`/singer/${music.singerInfo.id}`);
-                                        e.stopPropagation();
-                                    }}
-                                >
-                                    {music.singerInfo.singerName}
-                                </div>
-                            ) : (
-                                <div className={cx('singer')}>{music.singerInfo.singerName}</div>
-                            )}
+                            <div>
+                                <div className={cx('name')}>{music.musicName}</div>
+                            </div>
+                            <div
+                                className={cx('singer', 'link-singer')}
+                                onClick={(e) => {
+                                    navigate(`/singer/${music.singerInfo.id}`);
+                                    e.stopPropagation();
+                                }}
+                            >
+                                {music.singerInfo.singerName}
+                            </div>
                         </div>
                     </div>
                     {time && <div className={cx('time')}>{formatDate.format(Date.parse(music.createdAt))}</div>}

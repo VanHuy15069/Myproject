@@ -8,4 +8,5 @@ const categoryRouter = express.Router()
     categoryRouter.patch('/image/:id', upload.uploadImage, categoryController.updateImage)
     categoryRouter.delete('/:id', categoryController.deleteCategory)
     categoryRouter.get('/getCategory', categoryController.getCategory)
+    categoryRouter.get('/getOne/:id', categoryController.getOneCategory)
 export default categoryRouter

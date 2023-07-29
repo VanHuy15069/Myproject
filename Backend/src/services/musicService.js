@@ -312,10 +312,9 @@ export const getOfWeeklyService = (nationId, limit) =>
             const sevenDaysAgo = new Date()
             sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
             const music = await db.Music.findAll({
-                where: {nationId: nationId},
                 limit: Number(limit),
                 order: [['views', 'DESC']],
-                where: {updatedAt: {[Op.gte]: sevenDaysAgo}},
+                where: {nationId: nationId,updatedAt: {[Op.gte]: sevenDaysAgo}},
                 include: [
                     {   
                         model: db.Category,
@@ -397,6 +396,35 @@ export const favoriteService = (userId, name, sort) =>
                 response: music,
                 err: 0,
                 msg: 'Get data successfully'
+            })
+        } catch (error) {
+            reject(error)
+        }
+    })
+
+export const topNewMusicService = (limit, name, sort) => 
+    new Promise(async(resolve, reject) => {
+        try {
+            if(!limit) limit = 50
+            if(!name) name = 'createdAt'
+            if(!sort) sort = 'DESC'
+            const thirtyDayAgo = new Date()
+            thirtyDayAgo.setDate(thirtyDayAgo.getDate() - 30)
+            const music = await db.Music.findAll({
+                where: { createdAt: {[Op.gte]: thirtyDayAgo}},
+                limit: Number(limit),
+                order: [[name, sort]],
+                include: [
+                    {
+                        model: db.Singer,
+                        as: 'singerInfo',
+                    }
+                ]
+            })
+            resolve({
+                response: music,
+                err: 0,
+                msg: 'Get data ok!'
             })
         } catch (error) {
             reject(error)

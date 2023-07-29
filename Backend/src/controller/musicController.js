@@ -209,3 +209,16 @@ export const favorite = async (req, res) => {
         })
     }
 }
+
+export const getTopNewMusic = async (req, res) => {
+    try {
+        const {limit, name, sort} = req.query
+        const response = await musicService.topNewMusicService(limit, name, sort)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(500).json({
+            err: -1,
+            msg: 'failure' + error
+        })
+    }
+}

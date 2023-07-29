@@ -124,3 +124,23 @@ export const getCategoryService = (limit, name, sort) =>
             reject(error)
         }
     })
+
+export const getOneCategoryService = (id) =>
+    new Promise(async(resolve, reject) => {
+        try {
+            const category = await db.Category.findByPk(id)
+            if(!category){
+                resolve({
+                    err: 2,
+                    msg: 'This data does not exist'
+                })
+            }
+            resolve({
+                response: category,
+                err: 0,
+                msg: 'Get data successfully'
+            })
+        } catch (error) {
+            reject(error)
+        }
+    })

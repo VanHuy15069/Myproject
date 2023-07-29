@@ -1,14 +1,12 @@
 import classNames from 'classnames/bind';
 import styles from './NewMusic.module.scss';
-import { Context } from '~/Provider/Provider';
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import MusicOfSinger from '~/components/MusicOfSinger/MusicOfSinger';
 const cx = classNames.bind(styles);
 function NewMusic() {
     const navigate = useNavigate();
-    const [isRender, setIsRender] = useContext(Context);
     const [musics, setMusics] = useState([]);
     const [newMusicAll, setNewMusicAll] = useState([]);
     const [nation, setNation] = useState('Việt Nam');
@@ -45,15 +43,6 @@ function NewMusic() {
             })
             .catch(() => navigate('error'));
     }, [navigate]);
-    const handleAddSong = (song, musics) => {
-        const newList = [...musics];
-        const index = musics.indexOf(song);
-        const afterList = newList.slice(index);
-        newList.splice(index, newList.length - index);
-        const listMusic = afterList.concat(newList);
-        localStorage.setItem('listMusic', JSON.stringify(listMusic));
-        setIsRender(!isRender);
-    };
     const getAll = () => {
         setActive({
             all: true,
@@ -116,27 +105,13 @@ function NewMusic() {
                 {active.all ? (
                     <div className={cx('list')}>
                         {newMusicAll.map((music, index) => {
-                            return (
-                                <MusicOfSinger
-                                    key={index}
-                                    music={music}
-                                    time
-                                    onClick={() => handleAddSong(music, musics)}
-                                />
-                            );
+                            return <MusicOfSinger key={index} music={music} time list={newMusicAll} />;
                         })}
                     </div>
                 ) : (
                     <div className={cx('list')}>
                         {musics.map((music, index) => {
-                            return (
-                                <MusicOfSinger
-                                    key={index}
-                                    music={music}
-                                    time
-                                    onClick={() => handleAddSong(music, musics)}
-                                />
-                            );
+                            return <MusicOfSinger key={index} music={music} time list={musics} />;
                         })}
                     </div>
                 )}

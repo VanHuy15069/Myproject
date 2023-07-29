@@ -66,16 +66,8 @@
     margin: 0 -14px;
 }
 .item {
-    padding: 10px 14px;
-    border-radius: 4px;
+    padding: 0 14px;
     width: calc(100% / 3);
-    cursor: pointer;
-    &.curentSong {
-        background-color: hsla(0, 0%, 100%, 0.1);
-    }
-    &:hover {
-        background-color: hsla(0, 0%, 100%, 0.1);
-    }
 }
 .singer {
     margin-top: 48px;
