@@ -1,7 +1,7 @@
 import classNames from 'classnames/bind';
 import styles from './SideBar.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleDot, faHeart, faStar } from '@fortawesome/free-regular-svg-icons';
+import { faCircleDot, faStar } from '@fortawesome/free-regular-svg-icons';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { faHeadphones, faIcons, faMusic } from '@fortawesome/free-solid-svg-icons';
 const cx = classNames.bind(styles);
@@ -56,16 +56,6 @@ function SideBar() {
                         <p className={cx('text')}>Top 100</p>
                     </div>
                 </NavLink>
-                {user && (
-                    <NavLink to={'/category'} end className={(nav) => cx({ active: nav.isActive })}>
-                        <div className={cx('menu-item')}>
-                            <span className={cx('icon')}>
-                                <FontAwesomeIcon icon={faHeart} />
-                            </span>
-                            <p className={cx('text')}>BÀI hát yêu thích</p>
-                        </div>
-                    </NavLink>
-                )}
             </div>
             {!user && (
                 <div className={cx('btn')}>

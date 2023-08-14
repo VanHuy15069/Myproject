@@ -25,12 +25,12 @@ function Audio() {
     const user = JSON.parse(localStorage.getItem('user'));
     const playList = JSON.parse(localStorage.getItem('listMusic'));
     const navigate = useNavigate();
-    const [render, , , , renderFavorite, setRenderFavorite, , setSongId] = useContext(Context);
+    const [render, setRender, , , renderFavorite, setRenderFavorite, , setSongId, isPlay, setIsPlay] =
+        useContext(Context);
     const audioRef = useRef();
     const volumRef = useRef();
     const musicRef = useRef();
     const [listMusic, setListMusic] = useState([]);
-    const [isPlay, setIsPlay] = useState(false);
     const [isVolum, setIsVolum] = useState(true);
     const [currentSong, setCurrentSong] = useState({});
     const [minute, setMinute] = useState(0);
@@ -60,7 +60,8 @@ function Audio() {
     };
     const handleInputSong = useCallback(() => {
         musicRef.current.currentTime = (audioRef.current.value * musicRef.current.duration) / 100;
-    }, []);
+        if (!isPlay) musicRef.current.pause();
+    }, [isPlay]);
     const handleUpdate = useCallback(() => {
         if (musicRef.current.duration) {
             const progressPercent = (musicRef.current.currentTime / musicRef.current.duration) * 100;
@@ -100,16 +101,20 @@ function Audio() {
     const handleNext = () => {
         const songIndex = listMusic.indexOf(currentSong);
         setIsViewed(true);
-        if (!isRandom) {
-            if (songIndex === listMusic.length - 1) {
-                setCurrentSong(listMusic[0]);
-            } else setCurrentSong(listMusic[songIndex + 1]);
+        if (listMusic.length === 1) {
+            setRender(!render);
         } else {
-            let randomIndex = 0;
-            do {
-                randomIndex = Math.floor(Math.random() * listMusic.length);
-            } while (randomIndex === songIndex);
-            setCurrentSong(listMusic[randomIndex]);
+            if (!isRandom) {
+                if (songIndex === listMusic.length - 1) {
+                    setCurrentSong(listMusic[0]);
+                } else setCurrentSong(listMusic[songIndex + 1]);
+            } else {
+                let randomIndex = 0;
+                do {
+                    randomIndex = Math.floor(Math.random() * listMusic.length);
+                } while (randomIndex === songIndex);
+                setCurrentSong(listMusic[randomIndex]);
+            }
         }
     };
     const handlePrev = () => {
@@ -224,6 +229,12 @@ function Audio() {
         // eslint-disable-next-line
     }, [currentSong, isViewed, viewLoop, navigate]);
     useEffect(() => {
+        if (musicRef.current) {
+            if (isPlay) musicRef.current.play();
+            else musicRef.current.pause();
+        }
+    }, [isPlay, render]);
+    useEffect(() => {
         if (playList) {
             setCurrentSong(playList[0]);
             // setSongId([playList[0].id])
@@ -247,7 +258,7 @@ function Audio() {
                 });
         }
         // eslint-disable-next-line
-    }, [JSON.stringify(playList), render]);
+    }, [render]);
     useEffect(() => {
         if (Object.keys(currentSong).length > 0 && user !== null) {
             axios
@@ -260,7 +271,8 @@ function Audio() {
                 .then((res) => setIsHeart(res.data.response))
                 .catch((err) => console.log(err));
         }
-    }, [currentSong, navigate, renderFavorite, user]);
+        // eslint-disable-next-line
+    }, [currentSong, navigate, renderFavorite]);
     useEffect(() => {
         let timer;
         if (showMSG) {
@@ -273,7 +285,6 @@ function Audio() {
     useEffect(() => {
         setSongId(currentSong.id);
     }, [currentSong, setSongId]);
-
     return (
         <div className={cx('wrapper')}>
             {currentSong.musicLink && (
@@ -320,7 +331,7 @@ function Audio() {
                                 )}
                             </div>
                         )}
-                        <div className={cx('heart')} onClick={handleDownLoad}>
+                        <div className={cx('download')} onClick={handleDownLoad}>
                             <span className={cx('downLoad-icon')}>
                                 <FontAwesomeIcon icon={faDownload} />
                             </span>

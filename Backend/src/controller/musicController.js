@@ -222,3 +222,42 @@ export const getTopNewMusic = async (req, res) => {
         })
     }
 }
+
+export const randomMusic = async(req, res) => {
+    try {
+        const {userId, topicId, categoryId, nationId, limit} = req.query
+        if(!userId) {
+            return res.status(404).json({
+                err: 1,
+                msg: 'Full information is required'
+            })
+        }
+        const response = await musicService.randomMusicService(userId, topicId, categoryId, nationId, limit)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(500).json({
+            err: -1,
+            msg: 'failure' + error
+        })
+    }
+}
+
+export const getTheSameMusic = async(req, res) => {
+    try {
+        const {categoryId, topicId, limit, name, sort} = req.query
+        const musicId = req.params.id
+        if(!categoryId || !topicId || !musicId){
+            return res.status(404).json({
+                err: 1,
+                msg: 'Full information is required'
+            })
+        }
+        const response = await musicService.getTheSameMusicService(categoryId, topicId, musicId, limit, name, sort)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(500).json({
+            err: -1,
+            msg: 'failure' + error
+        })
+    }
+}

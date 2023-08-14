@@ -5,13 +5,17 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import ListMusic from '~/components/ListMusic/ListMusic';
 import MusicOfSinger from '~/components/MusicOfSinger/MusicOfSinger';
+import SingerRandomItem from '~/components/SingerRandomItem/SingerRandomItem';
 const cx = classNames.bind(styles);
 function CategoryItem() {
+    const user = JSON.parse(localStorage.getItem('user'));
     const params = useParams();
     const navigate = useNavigate();
     const [newMusics, setNewMusics] = useState([]);
     const [hotSongs, setHotSongs] = useState([]);
+    const [singers, setSingers] = useState([]);
     const [category, setCategory] = useState({});
+    const [suggestMusic, setSuggestMusic] = useState([]);
     useEffect(() => {
         axios
             .get(`http://localhost:4000/api/category/getOne/${params.id}`)
@@ -19,10 +23,12 @@ function CategoryItem() {
             .catch(() => navigate('/error'));
     }, [params.id, navigate]);
     useEffect(() => {
+        let limit = 5;
+        if (window.innerWidth <= 1231) limit = 4;
         axios
             .get(`http://localhost:4000/api/music/getByCategory/${params.id}`, {
                 params: {
-                    limit: 5,
+                    limit: limit,
                     name: 'createdAt',
                     sort: 'DESC',
                 },
@@ -46,6 +52,35 @@ function CategoryItem() {
             })
             .catch((err) => console.log(err));
     }, [params.id]);
+    useEffect(() => {
+        let limit = 5;
+        if (window.innerWidth <= 1231) limit = 4;
+        axios
+            .get(`http://localhost:4000/api/singer/getByCategory/${params.id}`, {
+                params: {
+                    limit: limit,
+                },
+            })
+            .then((res) => setSingers(res.data.response))
+            .catch(() => navigate('/error'));
+    }, [params.id, navigate]);
+    useEffect(() => {
+        if (user) {
+            let limit = 5;
+            if (window.innerWidth <= 1231) limit = 4;
+            axios
+                .get('http://localhost:4000/api/music/randomMusic', {
+                    params: {
+                        limit: limit,
+                        userId: user.id,
+                        categoryId: params.id,
+                    },
+                })
+                .then((res) => setSuggestMusic(res.data.response))
+                .catch(() => navigate('/error'));
+        }
+        // eslint-disable-next-line
+    }, [params.id, navigate]);
     return (
         <div className={cx('wrapper')}>
             <div className={cx('banner')}>
@@ -62,6 +97,23 @@ function CategoryItem() {
                             return (
                                 <div key={index} className={cx('item')}>
                                     <MusicOfSinger music={song} list={hotSongs} hotSong />
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+                {user && suggestMusic.length > 0 && (
+                    <div className={cx('list')}>
+                        <ListMusic title={'Gợi ý cho bạn'} music={suggestMusic} />
+                    </div>
+                )}
+                <div className={cx('list')}>
+                    <div className={cx('title')}>Nghệ Sĩ</div>
+                    <div className={cx('list-singer')}>
+                        {singers.map((singer, index) => {
+                            return (
+                                <div key={index} className={cx('item-singer')}>
+                                    <SingerRandomItem singer={singer} />
                                 </div>
                             );
                         })}

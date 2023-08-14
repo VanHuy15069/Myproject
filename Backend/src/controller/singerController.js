@@ -124,3 +124,45 @@ export const randomSinger = async (req, res) => {
         })
     }
 }
+
+export const getByCategory = async(req, res) =>{
+    try {
+        const id = req.params.id
+        const limit = req.query.limit
+        const response = await singerService.getByCategoryService(id, limit)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(500).json({
+            err: -1,
+            msg: 'failure' + error
+        })
+    }
+}
+
+export const getByTopic = async(req, res) =>{
+    try {
+        const id = req.params.id
+        const limit = req.query.limit
+        const response = await singerService.getByTopicService(id, limit)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(500).json({
+            err: -1,
+            msg: 'failure' + error
+        })
+    }
+}
+
+export const getByNation = async(req, res) => {
+    try {
+        const id = req.params.id
+        const limit = req.query.limit
+        const response = await singerService.getByNationService(id, limit)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(500).json({
+            err: -1,
+            msg: 'failure' + error
+        })
+    }
+}

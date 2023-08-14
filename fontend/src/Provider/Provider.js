@@ -5,6 +5,7 @@ function Provider({ children }) {
     const [renderAvata, setRenderAvata] = useState(false);
     const [renderFavorite, setRenderFavorite] = useState(false);
     const [songId, setSongId] = useState(0);
+    const [isPlay, setIsPlay] = useState(false);
     return (
         <Context.Provider
             value={[
@@ -16,6 +17,8 @@ function Provider({ children }) {
                 setRenderFavorite,
                 songId,
                 setSongId,
+                isPlay,
+                setIsPlay,
             ]}
         >
             {children}

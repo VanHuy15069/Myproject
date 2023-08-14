@@ -13,8 +13,8 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Music.belongsTo(models.Singer, {foreignKey: 'singerId', targetKey: 'id', as: 'singerInfo'})
       Music.hasMany(models.Favorite, {foreignKey: 'musicId', as: 'musicFavorite'})
-      Music.belongsTo(models.Category, {foreignKey: 'categoryId', targetKey: 'id', as: 'categoryInfo'})
       Music.belongsTo(models.Topic, {foreignKey: 'topicId', targetKey: 'id', as: 'topicInfo'})
+      Music.belongsTo(models.Category, {foreignKey: 'categoryId', targetKey: 'id', as: 'categoryInfo'})
       Music.belongsTo(models.Nation, {foreignKey: 'nationId', targetKey: 'id', as: 'nationInfo'})
     }
   }

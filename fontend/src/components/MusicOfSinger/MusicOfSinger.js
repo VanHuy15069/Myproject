@@ -55,7 +55,8 @@ function MusicOfSinger({ music, time = false, favorite = false, index, list, hot
                 .then((res) => setIsHeart(res.data.response))
                 .catch(() => navigate('/error'));
         }
-    }, [navigate, user, music.id, renderFavorite]);
+        // eslint-disable-next-line
+    }, [navigate, music.id, renderFavorite]);
     const handleAddSong = () => {
         const newList = [...list];
         const index = list.indexOf(music);
@@ -166,8 +167,9 @@ function MusicOfSinger({ music, time = false, favorite = false, index, list, hot
                             <img src={`http://localhost:4000/src/${music.image}`} alt="" />
                         </div>
                         <div className={cx('music-info')}>
-                            <div>
+                            <div className={cx('music-name')}>
                                 <div className={cx('name')}>{music.musicName}</div>
+                                {music.vip && <div className={cx('vip')}>Premium</div>}
                             </div>
                             <div
                                 className={cx('singer', 'link-singer')}

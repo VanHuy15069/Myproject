@@ -10,6 +10,9 @@
         object-fit: cover;
     }
 }
+.container {
+    margin-bottom: 20px;
+}
 .list {
     margin-top: 48px;
 }
@@ -27,4 +30,21 @@
 .item {
     width: calc(100% / 3);
     padding: 0 14px;
+}
+.list-singer {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -14px;
+}
+.item-singer {
+    width: 20%;
+    padding: 0 14px;
+}
+@media (max-width: 1231px) {
+    .item {
+        width: 50%;
+    }
+    .item-singer {
+        width: 25%;
+    }
 }

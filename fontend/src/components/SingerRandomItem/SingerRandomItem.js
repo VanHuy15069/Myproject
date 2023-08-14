@@ -7,11 +7,12 @@ import { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 const cx = classNames.bind(styles);
-function SingerRandomItem({ singer }) {
+function SingerRandomItem({ singer, control = true }) {
     const navigate = useNavigate();
     const user = JSON.parse(localStorage.getItem('user'));
     const [follow, setFollow] = useState(0);
     const [isFollow, setIsFollow] = useState(false);
+    const [render, setRender] = useState(false);
     const [isRender, setIsRender] = useContext(Context);
     useEffect(() => {
         if (user && singer.id) {
@@ -22,7 +23,8 @@ function SingerRandomItem({ singer }) {
                 })
                 .catch(() => navigate('/error'));
         }
-    }, [singer.id, user, navigate]);
+        // eslint-disable-next-line
+    }, [singer.id, navigate, render]);
     useEffect(() => {
         axios
             .get(`http://localhost:4000/api/follow/countFollow/${singer.id}`)
@@ -46,10 +48,22 @@ function SingerRandomItem({ singer }) {
                 },
             })
             .then((res) => {
-                localStorage.setItem('listMusic', JSON.stringify(res.data.response.rows));
-                setIsRender(!isRender);
+                if (res.data.response.count > 0) {
+                    localStorage.setItem('listMusic', JSON.stringify(res.data.response.rows));
+                    setIsRender(!isRender);
+                } else navigate(`/singer/${singer.id}`);
             })
             .catch(() => navigate('/error'));
+    };
+    const handleAddFollow = () => {
+        if (user) {
+            axios
+                .post('http://localhost:4000/api/follow/addFollow', { userId: user.id, singerId: singer.id })
+                .then(() => {
+                    setRender(!render);
+                })
+                .catch(() => navigate('/error'));
+        } else navigate('/login');
     };
     return (
         <div className={cx('wrapper')}>
@@ -66,23 +80,25 @@ function SingerRandomItem({ singer }) {
                 </Link>
                 <div className={cx('follow')}>{follow < 1000 ? follow : Math.floor(follow / 1000) + 'K'} quan tâm</div>
             </div>
-            <div className={cx('btn')}>
-                {isFollow ? (
-                    <button className={cx('follow-btn', 'followed')} onClick={handleGetMusic}>
-                        <span className={cx('icon')}>
-                            <FontAwesomeIcon icon={faShuffle} />
-                        </span>
-                        Góc nhạc
-                    </button>
-                ) : (
-                    <button className={cx('follow-btn')}>
-                        <span className={cx('icon')}>
-                            <FontAwesomeIcon icon={faUserPlus} />
-                        </span>
-                        Quan tâm
-                    </button>
-                )}
-            </div>
+            {control && (
+                <div className={cx('btn')}>
+                    {isFollow ? (
+                        <button className={cx('follow-btn', 'followed')} onClick={handleGetMusic}>
+                            <span className={cx('icon')}>
+                                <FontAwesomeIcon icon={faShuffle} />
+                            </span>
+                            Góc nhạc
+                        </button>
+                    ) : (
+                        <button className={cx('follow-btn')} onClick={handleAddFollow}>
+                            <span className={cx('icon')}>
+                                <FontAwesomeIcon icon={faUserPlus} />
+                            </span>
+                            Quan tâm
+                        </button>
+                    )}
+                </div>
+            )}
         </div>
     );
 }

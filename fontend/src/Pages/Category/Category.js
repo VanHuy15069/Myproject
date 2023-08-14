@@ -15,11 +15,19 @@ function Category() {
     const [topicAll, setTopicAll] = useState([]);
     const [idBanner, setIdBanner] = useState([0]);
     const [nations, setNations] = useState([]);
+    const [topicLimit, setTopicLimit] = useState(8);
     useEffect(() => {
+        if (window.innerWidth <= 1231) {
+            setTopicLimit(6);
+        }
+    }, []);
+    useEffect(() => {
+        let limit = 5;
+        if (window.innerWidth <= 1231) limit = 4;
         axios
             .get('http://localhost:4000/api/category/getCategory', {
                 params: {
-                    limit: 5,
+                    limit: limit,
                 },
             })
             .then((res) => {
@@ -39,14 +47,14 @@ function Category() {
         axios
             .get('http://localhost:4000/api/topic/getAll', {
                 params: {
-                    topicLimit: 8,
+                    topicLimit: topicLimit,
                 },
             })
             .then((res) => {
                 setTopic(res.data.response.rows);
             })
             .catch(() => navigate('/error'));
-    }, [navigate]);
+    }, [navigate, topicLimit]);
     useEffect(() => {
         axios
             .get('http://localhost:4000/api/topic/getAll')
@@ -70,7 +78,7 @@ function Category() {
                     <h3>Nổi bật</h3>
                     <div className={cx('list')}>
                         <div className={cx('item')}>
-                            <Card image={Image.topNewMusic} content={'BXH Nhạc Mới'} link={'/'} />
+                            <Card image={Image.topNewMusic} content={'BXH Nhạc Mới'} link={'/rating'} />
                         </div>
                         <div className={cx('item')}>
                             <Card image={Image.top100} content={'Top 100'} link={'/'} />
@@ -80,7 +88,7 @@ function Category() {
                                 <Card
                                     image={`http://localhost:4000/src/${topicAll[0].image}`}
                                     content={topicAll[0].title}
-                                    link={'/'}
+                                    link={`/topic/${topicAll[0].id}`}
                                 />
                             </div>
                         )}
@@ -89,22 +97,23 @@ function Category() {
                                 <Card
                                     image={`http://localhost:4000/src/${topicAll[topicAll.length - 1].image}`}
                                     content={topicAll[topicAll.length - 1].title}
-                                    link={'/'}
+                                    link={`/topic/${topicAll[topicAll.length - 1].id}`}
                                 />
                             </div>
                         )}
                     </div>
                 </div>
                 <div className={cx('cards', 'nation')}>
-                    <h3>Nổi bật</h3>
+                    <h3>Quốc Gia</h3>
                     <div className={cx('list')}>
                         {nations.map((nation, index) => {
+                            if (nation.nationName === 'Trung Quốc') nation.nationName = 'Hoa Ngữ';
                             return (
                                 <div key={index} className={cx('item')}>
                                     <Card
                                         image={`http://localhost:4000/src/${nation.image}`}
                                         content={`Nhạc ${nation.nationName}`}
-                                        link={'/'}
+                                        link={`/nation/${nation.id}`}
                                     />
                                 </div>
                             );
@@ -117,7 +126,7 @@ function Category() {
                         {topics.map((topic, index) => {
                             return (
                                 <div key={index} className={cx('topic-item')}>
-                                    <div className={cx('topic-card')}>
+                                    <div className={cx('topic-card')} onClick={() => navigate(`/topic/${topic.id}`)}>
                                         <img
                                             className={cx('topic-img')}
                                             src={`http://localhost:4000/src/${topic.image}`}

@@ -128,3 +128,11 @@
         border-color: #8b45ca;
     }
 }
+@media (max-width: 1231px) {
+    .item {
+        width: 50%;
+    }
+    .topic-item {
+        width: calc(100% / 3);
+    }
+}

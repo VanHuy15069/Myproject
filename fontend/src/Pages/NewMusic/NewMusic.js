@@ -15,6 +15,7 @@ function NewMusic() {
         vi: false,
         usuk: false,
         korea: false,
+        china: false,
     });
     useEffect(() => {
         axios
@@ -58,6 +59,7 @@ function NewMusic() {
             vi: true,
             usuk: false,
             korea: false,
+            china: false,
         });
     };
     const getUSUK = () => {
@@ -67,6 +69,7 @@ function NewMusic() {
             vi: false,
             usuk: true,
             korea: false,
+            china: false,
         });
     };
     const getKorea = () => {
@@ -76,6 +79,17 @@ function NewMusic() {
             vi: false,
             usuk: false,
             korea: true,
+            china: false,
+        });
+    };
+    const getChina = () => {
+        setNation('Trung Quốc');
+        setActive({
+            all: false,
+            vi: false,
+            usuk: false,
+            korea: false,
+            china: true,
         });
     };
     return (
@@ -94,6 +108,9 @@ function NewMusic() {
                 </div>
                 <div className={cx('btn', { active: active.korea })} onClick={getKorea}>
                     Hàn Quốc
+                </div>
+                <div className={cx('btn', { active: active.china })} onClick={getChina}>
+                    Trung Quốc
                 </div>
             </div>
             <div className={cx('header')}>

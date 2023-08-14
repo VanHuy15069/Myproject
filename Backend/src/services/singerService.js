@@ -134,14 +134,14 @@ export const getAllSingerService = () =>
 export const searchSingerService = (singerName, limit, offset, name, sort) =>
     new Promise(async(resolve, reject) => {
         try {
-            if(!limit) limit = 5
-            if(!offset) offset = 0
+            const queries = {}
+            if(limit) queries.limit = 5
+            if(offset) queries.offset = Number(limit*offset)
             if(!name) name = 'id'
             if(!sort) sort = 'DESC'
             const singer = await db.Singer.findAndCountAll({
                 where: {singerName: {[Op.substring]: singerName}},
-                limit: Number(limit),
-                offset: Number(offset*limit),
+                ...queries,
                 order: [[name, sort]]
             })
             resolve({
@@ -170,6 +170,114 @@ export const randomSingerService = (id, limit, offset) =>
                 err: 0,
                 msg: 'Successfully retrieved information'
             })
+        } catch (error) {
+            reject(error)
+        }
+    })
+
+export const getByCategoryService = (categoryId, limit) =>
+    new Promise(async(resolve, reject) => {
+        try {
+            if(!limit) limit = 5
+            const singer = await db.Singer.findAll({
+                attributes: ['id', 'singerName', 'image'],
+                include: [
+                    {
+                        model: db.Music,
+                        as: 'musicInfo',
+                        attributes: ['id'],
+                        include: [
+                            {
+                                model: db.Category,
+                                as: 'categoryInfo',
+                                where: {id: categoryId},
+                                attributes: ['id']
+                            }
+                        ]
+                    }
+                ]
+            })
+            if(singer){
+                const singerOK = await singer.filter(item => item.musicInfo.length > 0)
+                await singerOK.sort((a,b) => b.musicInfo.length - a.musicInfo.length)
+                resolve({
+                    response: singerOK.slice(0, Number(limit)),
+                    er: 0,
+                    msg: 'Successfully retrieved information'
+                })
+            }
+        } catch (error) {
+            reject(error)
+        }
+    })
+
+    export const getByTopicService = (topicId, limit) =>
+    new Promise(async(resolve, reject) => {
+        try {
+            if(!limit) limit = 5
+            const singer = await db.Singer.findAll({
+                attributes: ['id', 'singerName', 'image'],
+                include: [
+                    {
+                        model: db.Music,
+                        as: 'musicInfo',
+                        attributes: ['id'],
+                        include: [
+                            {
+                                model: db.Topic,
+                                as: 'topicInfo',
+                                where: {id: topicId},
+                                attributes: ['id']
+                            }
+                        ]
+                    }
+                ]
+            })
+            if(singer){
+                const singerOK = await singer.filter(item => item.musicInfo.length > 0)
+                await singerOK.sort((a,b) => b.musicInfo.length - a.musicInfo.length)
+                resolve({
+                    response: singerOK.slice(0, Number(limit)),
+                    er: 0,
+                    msg: 'Successfully retrieved information'
+                })
+            }
+        } catch (error) {
+            reject(error)
+        }
+    })
+
+    export const getByNationService = (nationId, limit) =>
+    new Promise(async(resolve, reject) => {
+        try {
+            if(!limit) limit = 5
+            const singer = await db.Singer.findAll({
+                attributes: ['id', 'singerName', 'image'],
+                include: [
+                    {
+                        model: db.Music,
+                        as: 'musicInfo',
+                        attributes: ['id'],
+                        include: [
+                            {
+                                model: db.Nation,
+                                as: 'nationInfo',
+                                where: {id: nationId},
+                                attributes: ['id']
+                            }
+                        ]
+                    }
+                ]
+            })
+            if(singer){
+                const singerOK = await singer.filter(item => item.musicInfo.length > 0)
+                await singerOK.sort((a,b) => b.musicInfo.length - a.musicInfo.length)
+                resolve({
+                    response: singerOK.slice(0, Number(limit)),
+                    er: 0,
+                    msg: 'Successfully retrieved information'
+                })
+            }
         } catch (error) {
             reject(error)
         }

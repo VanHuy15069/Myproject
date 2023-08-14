@@ -23,6 +23,7 @@
     font-size: 1.2rem;
     text-transform: uppercase;
     margin-right: 15px;
+    transition: all ease-out 0.3s;
     cursor: pointer;
     &.active {
         background-color: #c273ed;

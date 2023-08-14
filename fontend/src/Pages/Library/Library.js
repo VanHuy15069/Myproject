@@ -14,10 +14,12 @@ function Library() {
     const [singers, setSingers] = useState([]);
     const [musics, setMusics] = useState([]);
     useEffect(() => {
+        let limit = 5;
+        if (window.innerWidth <= 1231) limit = 4;
         axios
             .get(`http://localhost:4000/api/follow/getSinger/${user.id}`, {
                 params: {
-                    limit: 5,
+                    limit: limit,
                 },
             })
             .then((res) => {

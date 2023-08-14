@@ -11,4 +11,7 @@ const singerRouter = express.Router()
     singerRouter.get('/getAll', singerController.getAllSinger)
     singerRouter.get('/searchSinger', singerController.searchSinger)
     singerRouter.get('/randomSinger/:id', singerController.randomSinger)
+    singerRouter.get('/getByCategory/:id', singerController.getByCategory)
+    singerRouter.get('/getByTopic/:id', singerController.getByTopic)
+    singerRouter.get('/getByNation/:id', singerController.getByNation)
 export default singerRouter

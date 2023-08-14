@@ -6,6 +6,8 @@
     right: 0;
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.8);
+    z-index: 99999;
+    cursor: auto;
 }
 .box {
     position: relative;
@@ -23,6 +25,7 @@
     text-align: center;
     margin: 20px;
     width: 300px;
+    user-select: none;
 }
 .title {
     font-size: 1.8rem;

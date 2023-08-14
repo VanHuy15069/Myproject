@@ -9,7 +9,6 @@ import {
     faEye,
     faUpload,
     faXmark,
-    faCrown,
     faSquareCaretUp,
     faSquareCaretDown,
 } from '@fortawesome/free-solid-svg-icons';
@@ -49,6 +48,7 @@ function AdminMusic() {
     const [render, setRender] = useState(false);
     const [id, setId] = useState();
     const [singers, setSingers] = useState([]);
+    const [sort, setSort] = useState({ name: 'id', sort: 'ASC' });
     const [dataSelect, setDataSelcet] = useState({
         categoryId: '',
         topicId: '',
@@ -71,12 +71,14 @@ function AdminMusic() {
     }, [navigate]);
     useEffect(() => {
         axios
-            .get('http://localhost:4000/api/music/getAllMusic')
+            .get('http://localhost:4000/api/music/getAllMusic', {
+                params: { ...sort },
+            })
             .then((res) => {
                 setMusics(res.data.response);
             })
             .catch(() => navigate('/error'));
-    }, [navigate, render]);
+    }, [navigate, render, sort]);
     useEffect(() => {
         axios
             .get('http://localhost:4000/api/topic/getAll')
@@ -326,6 +328,24 @@ function AdminMusic() {
             })
             .catch(() => navigate('/error'));
     };
+    const handleSortID = () => {
+        if (sort.name === 'id') {
+            if (sort.sort === 'ASC') setSort({ ...sort, sort: 'DESC' });
+            else setSort({ ...sort, sort: 'ASC' });
+        } else setSort({ name: 'id', sort: 'ASC' });
+    };
+    const handleSortMusic = () => {
+        if (sort.name === 'musicName') {
+            if (sort.sort === 'ASC') setSort({ ...sort, sort: 'DESC' });
+            else setSort({ ...sort, sort: 'ASC' });
+        } else setSort({ name: 'musicName', sort: 'ASC' });
+    };
+    const handleSortViews = () => {
+        if (sort.name === 'views') {
+            if (sort.sort === 'ASC') setSort({ ...sort, sort: 'DESC' });
+            else setSort({ ...sort, sort: 'ASC' });
+        } else setSort({ name: 'views', sort: 'ASC' });
+    };
     return (
         <div className={cx('wrapper')}>
             <TitleAdmin icon={faMusic} title={'Quản lý bài hát'} add onClick={handleShowAdd} />
@@ -333,12 +353,12 @@ function AdminMusic() {
                 <table className={cx('table')}>
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th onClick={handleSortID}>ID</th>
                             <th className={cx('avata')}>Ảnh bìa</th>
-                            <th>Tên bài hát</th>
+                            <th onClick={handleSortMusic}>Tên bài hát</th>
                             <th>Ca sĩ</th>
-                            <th>Lượt views</th>
-                            <th colSpan={4}>Thao tác</th>
+                            <th onClick={handleSortViews}>Lượt views</th>
+                            <th>Thao tác</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -356,12 +376,10 @@ function AdminMusic() {
                                         </div>
                                     </td>
                                     <td>
-                                        {music.musicName}
-                                        {music.vip && (
-                                            <span className={cx('icon-vip')}>
-                                                <FontAwesomeIcon icon={faCrown} />
-                                            </span>
-                                        )}
+                                        <div className={cx('col-name')}>
+                                            <div className={cx('music-name')}>{music.musicName}</div>
+                                            {music.vip && <div className={cx('vip')}>premium</div>}
+                                        </div>
                                     </td>
                                     <td>{music.singerInfo.singerName}</td>
                                     <td>{music.views}</td>
@@ -372,8 +390,6 @@ function AdminMusic() {
                                             </span>
                                             Chi tiết
                                         </button>
-                                    </td>
-                                    <td className={cx('control-col')}>
                                         <button className={cx('btn', 'btn-pgrade')} onClick={() => handleVip(music.id)}>
                                             <span className={cx('icon')}>
                                                 {music.vip ? (
@@ -384,8 +400,6 @@ function AdminMusic() {
                                             </span>
                                             {music.vip ? 'Normal' : 'Upgrade'}
                                         </button>
-                                    </td>
-                                    <td className={cx('control-col')}>
                                         <button
                                             className={cx('btn', 'btn-update')}
                                             onClick={() => handleShowUpdate(music)}
@@ -395,9 +409,10 @@ function AdminMusic() {
                                             </span>
                                             Sửa
                                         </button>
-                                    </td>
-                                    <td className={cx('control-col')} onClick={() => handleShowDelete(music)}>
-                                        <button className={cx('btn', 'btn-delete')}>
+                                        <button
+                                            className={cx('btn', 'btn-delete')}
+                                            onClick={() => handleShowDelete(music)}
+                                        >
                                             <span className={cx('icon')}>
                                                 <FontAwesomeIcon icon={faTrash} />
                                             </span>

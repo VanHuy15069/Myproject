@@ -136,6 +136,7 @@
     display: flex;
     align-items: center;
 }
+.download,
 .heart {
     margin: 0 4px;
     display: flex;
@@ -165,5 +166,10 @@
     }
     to {
         transform: translateX(0);
+    }
+}
+@media (max-width: 1131px) {
+    .download {
+        display: none;
     }
 }

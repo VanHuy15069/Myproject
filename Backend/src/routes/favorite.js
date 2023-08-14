@@ -6,4 +6,5 @@ const favoriteRouter = express.Router()
     favoriteRouter.get('/getMusic/:id', favoriteController.getMusic)
     favoriteRouter.get('/isFavorite', favoriteController.isFavorite)
     favoriteRouter.delete('/delete', favoriteController.deleteFavorite)
+    favoriteRouter.get('/countFavorite', favoriteController.getFavorite)
 export default favoriteRouter

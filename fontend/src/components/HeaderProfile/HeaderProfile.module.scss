@@ -90,3 +90,14 @@
     color: yellow;
     font-size: 5rem;
 }
+@media (max-width: 1231px) {
+    .wrapper {
+        left: 70px;
+    }
+    .info {
+        left: 29px;
+    }
+    .name {
+        font-size: 5.5rem;
+    }
+}

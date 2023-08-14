@@ -1,25 +1,35 @@
 import classNames from 'classnames/bind';
 import styles from './Singer.module.scss';
+import { saveAs } from 'file-saver';
 import { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import HeaderProfile from '~/components/HeaderProfile/HeaderProfile';
 import { Context } from '~/Provider/Provider';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { faChevronRight, faHeart as heartSolid, faDownload } from '@fortawesome/free-solid-svg-icons';
+import { faCirclePlay, faHeart } from '@fortawesome/free-regular-svg-icons';
 import MusicOfSinger from '~/components/MusicOfSinger/MusicOfSinger';
 import ListSinger from '~/components/ListSinger/ListSinger';
+import PlayIcon from '~/components/PlayIcon/PlayIcon';
+import BoxMSG from '~/components/BoxMSG/BoxMSG';
+import PoperWrapper from '~/components/PoperWrapper/PoperWrapper';
 const cx = classNames.bind(styles);
 function Singer() {
     const params = useParams();
     const navigate = useNavigate();
-    const [isRender, setIsRender] = useContext(Context);
+    const user = JSON.parse(localStorage.getItem('user'));
+    const [isRender, setIsRender, , , renderFavorite, setRenderFavorite, songId, , isPlay, setIsPlay] =
+        useContext(Context);
+    const [isFavorite, setIsFavorite] = useState(false);
+    const [showMSG, setShowMSG] = useState(false);
+    const [showBox, setShowBox] = useState(false);
+    const [msg, setMsg] = useState('');
     const [singer, setSinger] = useState({});
     const [singerRandom, setSingerRandom] = useState([]);
     const [newMusic, setNewMusic] = useState({});
     const [outstandingMusic, setOutstandingMusic] = useState([]);
     const [follow, setFollow] = useState(0);
-    const user = JSON.parse(localStorage.getItem('user'));
     const [isFollow, setIsFollow] = useState(false);
     const [render, setRender] = useState(false);
     let formatDate = new Intl.DateTimeFormat('vi-VN', {
@@ -27,6 +37,31 @@ function Singer() {
         month: '2-digit',
         year: 'numeric',
     });
+    useEffect(() => {
+        let timer;
+        if (showMSG) {
+            timer = setTimeout(() => {
+                setShowMSG(false);
+            }, 3000);
+        }
+        return () => clearTimeout(timer);
+    }, [showMSG]);
+    useEffect(() => {
+        if (newMusic) {
+            if (user && newMusic.id) {
+                axios
+                    .get('http://localhost:4000/api/favorite/isFavorite', {
+                        params: {
+                            userId: user.id,
+                            musicId: newMusic.id,
+                        },
+                    })
+                    .then((res) => setIsFavorite(res.data.response))
+                    .catch(() => navigate('/error'));
+            }
+        }
+        // eslint-disable-next-line
+    }, [navigate, renderFavorite, newMusic]);
     useEffect(() => {
         axios
             .get(`http://localhost:4000/api/follow/countFollow/${singer.id}`)
@@ -44,9 +79,11 @@ function Singer() {
             .catch(() => navigate('/error'));
     }, [navigate, params.id]);
     useEffect(() => {
+        let limit = 5;
+        if (window.innerWidth <= 1231) limit = 4;
         axios
             .get(`http://localhost:4000/api/singer/randomSinger/${params.id}`, {
-                params: { limit: 5 },
+                params: { limit: limit },
             })
             .then((res) => {
                 setSingerRandom(res.data.response.rows);
@@ -67,10 +104,12 @@ function Singer() {
             .catch(() => navigate('/error'));
     }, [params.id, navigate]);
     useEffect(() => {
+        let limit = 6;
+        if (window.innerWidth <= 1231) limit = 3;
         axios
             .get(`http://localhost:4000/api/music/getBySinger/${params.id}`, {
                 params: {
-                    limit: 6,
+                    limit: limit,
                     name: 'views',
                 },
             })
@@ -88,7 +127,8 @@ function Singer() {
                 })
                 .catch(() => navigate('/error'));
         }
-    }, [render, singer.id, user, navigate]);
+        // eslint-disable-next-line
+    }, [render, singer.id, navigate]);
     const handleAddFollows = () => {
         if (user) {
             axios
@@ -123,6 +163,87 @@ function Singer() {
         }
         setIsRender(!isRender);
     };
+    const handleAddFavorite = (e) => {
+        e.stopPropagation();
+        if (user) {
+            axios
+                .post('http://localhost:4000/api/favorite/addFavorite', { userId: user.id, musicId: newMusic.id })
+                .then(() => {
+                    setRenderFavorite(!renderFavorite);
+                    setShowMSG(true);
+                    setMsg('Đã thêm bài hát vào thư viện');
+                })
+                .catch(() => navigate('/error'));
+        } else navigate('/login');
+    };
+    const handleUnFavorite = (e) => {
+        e.stopPropagation();
+        axios
+            .delete('http://localhost:4000/api/favorite/delete', {
+                params: {
+                    userId: user.id,
+                    musicId: newMusic.id,
+                },
+            })
+            .then(() => {
+                setRenderFavorite(!renderFavorite);
+                setShowMSG(true);
+                setMsg('Đã xóa bài hát khỏi vào thư viện');
+            })
+            .catch(() => navigate('/error'));
+    };
+    const handleDownLoad = (e) => {
+        e.stopPropagation();
+        const src = `http://localhost:4000/src/${newMusic.musicLink}`;
+        const fileName = `${newMusic.musicName}.mp3`;
+        if (newMusic.vip) {
+            if (user) {
+                if (user.vip) {
+                    saveAs(src, fileName);
+                    if (!isFavorite) {
+                        axios
+                            .post('http://localhost:4000/api/favorite/addFavorite', {
+                                userId: user.id,
+                                musicId: newMusic.id,
+                            })
+                            .then(() => {
+                                setRenderFavorite(!renderFavorite);
+                            })
+                            .catch(() => navigate('/error'));
+                    }
+                } else {
+                    setShowBox(true);
+                }
+            } else setShowBox(true);
+        } else {
+            saveAs(src, fileName);
+            if (!isFavorite) {
+                axios
+                    .post('http://localhost:4000/api/favorite/addFavorite', {
+                        userId: user.id,
+                        musicId: newMusic.id,
+                    })
+                    .then(() => {
+                        setRenderFavorite(!renderFavorite);
+                    })
+                    .catch(() => navigate('/error'));
+            }
+        }
+    };
+    const handleUpgrade = () => {
+        if (user) {
+            axios
+                .patch(`http://localhost:4000/api/user/upgrade/${user.id}`)
+                .then((res) => {
+                    setShowBox(false);
+                    setShowMSG(true);
+                    setMsg('Tài khoản đã được nâng cấp');
+                    console.log(res.data.response);
+                    localStorage.setItem('user', JSON.stringify(res.data.response));
+                })
+                .catch(() => navigate('/error'));
+        } else navigate('/login');
+    };
     return (
         <div className={cx('wrapper')}>
             <div className={cx('header')}>
@@ -140,7 +261,10 @@ function Singer() {
                 {newMusic && Object.keys(newMusic).length > 0 && (
                     <div className={cx('new')}>
                         <div className={cx('title')}>Mới phát hành</div>
-                        <div className={cx('content')} onClick={() => handleAddSongNew(newMusic)}>
+                        <div
+                            className={cx('content', { active: newMusic.id === songId && isPlay })}
+                            onClick={() => handleAddSongNew(newMusic)}
+                        >
                             <div className={cx('image-box')}>
                                 {newMusic.image && (
                                     <img
@@ -149,6 +273,33 @@ function Singer() {
                                         alt=""
                                     />
                                 )}
+                                <div className={cx('overlay')}>
+                                    <div className={cx('favorite')}>
+                                        {isFavorite ? (
+                                            <span className={cx('heart', 'added')} onClick={handleUnFavorite}>
+                                                <FontAwesomeIcon icon={heartSolid} />
+                                            </span>
+                                        ) : (
+                                            <span className={cx('heart')} onClick={handleAddFavorite}>
+                                                <FontAwesomeIcon icon={faHeart} />
+                                            </span>
+                                        )}
+                                    </div>
+                                    <div className={cx('play')}>
+                                        {songId === newMusic.id && isPlay ? (
+                                            <div className={cx('play-icon')} onClick={() => setIsPlay(false)}>
+                                                <PlayIcon />
+                                            </div>
+                                        ) : (
+                                            <span className={cx('pause')} onClick={() => setIsPlay(true)}>
+                                                <FontAwesomeIcon icon={faCirclePlay} />
+                                            </span>
+                                        )}
+                                    </div>
+                                    <div className={cx('download')} onClick={handleDownLoad}>
+                                        <FontAwesomeIcon icon={faDownload} />
+                                    </div>
+                                </div>
                             </div>
                             <div className={cx('music-info')}>
                                 <div className={cx('name')}>{newMusic.musicName}</div>
@@ -184,7 +335,7 @@ function Singer() {
                 )}
             </div>
             <div className={cx('list-singer')}>
-                <ListSinger singer={singerRandom} />
+                <ListSinger singer={singerRandom} title={'Bạn có thể thích'} />
             </div>
             <div className={cx('info')}>
                 <div className={cx('title')}>Về {singer.singerName}</div>
@@ -201,6 +352,18 @@ function Singer() {
                     </div>
                 </div>
             </div>
+            {showMSG && (
+                <div
+                    className={cx('msg')}
+                    onClick={(e) => {
+                        setShowMSG(false);
+                        e.stopPropagation();
+                    }}
+                >
+                    <BoxMSG>{msg}</BoxMSG>
+                </div>
+            )}
+            {showBox && <PoperWrapper onClickHide={() => setShowBox(false)} onClickBtn={handleUpgrade} />}
         </div>
     );
 }

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 const cx = classNames.bind(styles);
-function SingerItem({ image, singer }) {
+function SingerItem({ image, singer, onClick }) {
     const navigate = useNavigate();
     const [follows, setFollows] = useState();
     useEffect(() => {
@@ -16,7 +16,7 @@ function SingerItem({ image, singer }) {
             .catch(() => navigate('/error'));
     }, [navigate, singer.id]);
     return (
-        <div className={cx('wrapper')}>
+        <div className={cx('wrapper')} onClick={onClick}>
             <img className={cx('img')} src={image} alt="" />
             <div className={cx('content')}>
                 <div className={cx('singer')}>{singer.singerName}</div>

@@ -44,11 +44,12 @@
 .box {
     font-size: 1.2rem;
     padding: 0 6px;
-    border-radius: 2px;
+    border-radius: 4px;
     font-weight: 600;
-    background-color: rgb(255, 255, 0);
+    background-color: #e5ac1a;
     width: fit-content;
-    color: #000;
+    color: #fff;
+    text-transform: uppercase;
     &.basic {
         color: #fff;
         background-color: rgb(161, 161, 161);

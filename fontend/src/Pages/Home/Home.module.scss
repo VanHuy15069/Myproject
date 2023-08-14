@@ -37,6 +37,7 @@
     background-color: transparent;
     color: #fff;
     text-transform: uppercase;
+    transition: all ease-out 0.3s;
     cursor: pointer;
     &.active {
         background-color: #c273ed;
@@ -112,4 +113,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+@media (max-width: 1131px) {
+    .item {
+        width: 50%;
+    }
 }

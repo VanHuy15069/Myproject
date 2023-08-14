@@ -44,6 +44,19 @@ export const getAllNation = async (req, res) => {
     }
 }
 
+export const getOnly = async(req, res) => {
+    try {
+        const {limit, name, sort} = req.query
+        const response = await nationService.getOnlyService(req.params.id, limit, name, sort)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(500).json({
+            err: -1,
+            msg: 'failure ' + error
+        })
+    }
+}
+
 export const updateNation = async (req, res) => {
     try {
         const id = req.params.id

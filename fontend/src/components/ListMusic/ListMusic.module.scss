@@ -21,6 +21,10 @@
         color: #c273ed;
     }
 }
+.title {
+    text-transform: capitalize;
+    font-size: 2rem;
+}
 .icon {
     font-size: 1.6rem;
     margin-left: 6px;
@@ -38,4 +42,9 @@
     padding-left: 14px;
     padding-right: 14px;
     cursor: pointer;
+}
+@media (max-width: 1231px) {
+    .item {
+        width: 25%;
+    }
 }

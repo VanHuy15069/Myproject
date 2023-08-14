@@ -17,6 +17,10 @@ import SingerLibrary from '~/Pages/SingerLibrary/SingerLibrary';
 import Category from '~/Pages/Category/Category';
 import TopNewMusic from '~/Pages/TopNewMusic/TopNewMusic';
 import CategoryItem from '~/Pages/CategoryItem/CategoryItem';
+import TopicPage from '~/Pages/TopicPage/TopicPage';
+import NationPage from '~/Pages/NationPage/NationPage';
+import SearchPage from '~/Pages/SearchPage/SearchPage';
+import MusicPage from '~/Pages/MusicPage/MusicPage';
 
 export const publicRouter = [
     { path: '/', component: Home },
@@ -28,6 +32,10 @@ export const publicRouter = [
     { path: '/category', component: Category },
     { path: '/rating', component: TopNewMusic },
     { path: '/category/:id', component: CategoryItem },
+    { path: '/topic/:id', component: TopicPage },
+    { path: '/nation/:id', component: NationPage },
+    { path: '/search/:key', component: SearchPage },
+    { path: '/song/:id', component: MusicPage },
 ];
 export const userRouter = [
     { path: '/user', component: UserPage },

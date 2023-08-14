@@ -78,6 +78,18 @@ export const deleteCategoryService = (id) =>
                     err: 2,
                     msg: 'This data does not exist'
                 })
+            }   
+            const musics = await db.Music.findAll({
+                where: {categoryId: id}
+            })
+            if(musics){
+                musics.forEach(music => {
+                    const clearImg = path.resolve(__dirname, '..', '', `public/Images/${music.image}`);
+                    const clearMusic = path.resolve(__dirname, '..', '', `public/Images/${music.musicLink}`);
+                    fs.unlinkSync(clearImg)
+                    fs.unlinkSync(clearMusic)
+                })
+                await db.Music.destroy({where: {categoryId: id}})
             }
             const clearImg = path.resolve(__dirname, '..', '', `public/Images/${category.image}`);
             await category.destroy()

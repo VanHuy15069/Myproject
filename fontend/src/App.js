@@ -10,13 +10,6 @@ function App() {
     if (user) {
         admin = user.isAdmin;
     }
-    // useEffect(() => {
-    //     if (user) {
-    //         setIsLogin(true);
-    //     } else {
-    //         setIsLogin(false);
-    //     }
-    // }, [user, setIsLogin]);
     return (
         <div className="App">
             <Routes>

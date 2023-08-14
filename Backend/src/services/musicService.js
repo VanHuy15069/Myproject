@@ -1,4 +1,5 @@
-import db from "../models";
+import { log } from "console";
+import db, { Sequelize, sequelize } from "../models";
 import fs from 'fs'
 import path from "path";
 import { Op } from "sequelize";
@@ -199,14 +200,14 @@ export const getBySingerService = (singerId, limit, offset, name, sort) =>
 export const searchNameMusicService = (musicName, limit, offset, name, sort) =>
     new Promise(async(resolve, reject) => {
         try {
-            if(!limit) limit = 5
-            if(!offset) offset = 0
+            const queries = {}
+            if(limit) queries.limit = 5
+            if(offset) queries.offset = Number(limit*offset)
             if(!name) name = 'id'
             if(!sort) sort = 'DESC'
             const music = await db.Music.findAndCountAll({
                 where: {musicName: {[Op.substring]: musicName}},
-                limit: Number(limit),
-                offset: Number(limit*offset),
+                ...queries,
                 order: [[name, sort]],
                 include: [
                     {
@@ -255,7 +256,11 @@ export const deleteMusicService = (id) =>
                     msg: 'This data does not exist'
                 })
             }
+            const clearMusic = path.resolve(__dirname, '..', '', `public/Images/${music.musicLink}`);
+            const clearImage = path.resolve(__dirname, '..', '', `public/Images/${music.image}`)
             await music.destroy()
+            fs.unlinkSync(clearMusic)
+            fs.unlinkSync(clearImage)
             resolve({
                 err: 0,
                 msg: 'Delete data successfully'
@@ -269,13 +274,16 @@ export const getAllMusicService = (limit, offset, name, sort) =>
     new Promise(async(resolve, reject) => {
         try {
             const queries = {}
+            const order = {}
             if(limit) queries.limit = Number(limit)
             if(offset) queries.offset = Number(offset*limit)
             if(!name) name = 'id'
             if(!sort) sort = 'ASC'
+            if(name === 'musicName')  order.order = [[Sequelize.literal(`CONVERT(${name} USING utf8mb4) COLLATE utf8mb4_unicode_ci`), sort]]
+            else order.order = [[name, sort]]
             const music = await db.Music.findAll({
                 ...queries,
-                order: [[name, sort]],
+                ...order,
                 include: [
                     {   
                         model: db.Topic,
@@ -341,10 +349,6 @@ export const getOneMusicService = (id) =>
         try {
             const music = await db.Music.findByPk(id, {
                 include: [
-                    {   
-                        model: db.Category,
-                        as: 'categoryInfo',
-                    },
                     {
                         model: db.Singer,
                         as: 'singerInfo',
@@ -425,6 +429,78 @@ export const topNewMusicService = (limit, name, sort) =>
                 response: music,
                 err: 0,
                 msg: 'Get data ok!'
+            })
+        } catch (error) {
+            reject(error)
+        }
+    })
+
+export const randomMusicService = (userId, topicId, categoryId, nationId, limit) =>
+    new Promise(async(resolve, reject) => {
+        try {
+            const arr = []
+            const queries = {}
+            if(!limit) limit = 5
+            if(topicId) queries.topicId = topicId
+            if(categoryId) queries.categoryId = categoryId
+            if(nationId) queries.nationId = nationId
+            const favorite = await db.Favorite.findAll({
+                where: {userId: userId}
+            })
+            await favorite.forEach(item => arr.push(item.musicId))
+            const music = await db.Music.findAll({
+                limit: Number(limit),
+                order: sequelize.random(),
+                where: {id: {[Op.notIn]: arr}, ...queries},
+                include: [
+                    {
+                        model: db.Singer,
+                        as: 'singerInfo',
+                        attributes: ['id', 'singerName', 'image']
+                    }
+                ]
+            })
+            resolve({
+                response: music,
+                err: 0,
+                msg: 'OK'
+            })
+        } catch (error) {
+            reject(error)
+        }
+    })
+
+export const getTheSameMusicService = (categoryId, topicId, musicId, limit, name, sort) =>
+    new Promise(async(resolve, reject) => {
+        try {
+            const queries = {}
+            if(limit) queries.limit = Number(limit)
+            if(!name) name = 'createdAt'
+            if(!sort) sort = 'DESC'
+            const musics = await db.Music.findAll({
+                where: {[Op.or]: [{categoryId: categoryId}, {topicId: topicId}], id: {[Op.ne]: musicId}},
+                ...queries,
+                order: [[name, sort]],
+                include: [
+                    {
+                        model: db.Singer,
+                        as: 'singerInfo'
+                    }
+                ]
+            })
+            const currentMusic = await db.Music.findByPk(musicId,{
+                include: [
+                    {
+                        model: db.Singer,
+                        as: 'singerInfo'
+                    }
+                ]
+            })
+            musics.unshift(currentMusic)
+            resolve({
+                response: musics,
+                err: 0,
+                msg: 'Get data OK'
             })
         } catch (error) {
             reject(error)

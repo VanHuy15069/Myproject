@@ -7,13 +7,19 @@ import {
     faDownload,
     faGear,
     faMagnifyingGlass,
+    faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import { Context } from '~/Provider/Provider';
+import { useDebounce } from '@uidotdev/usehooks';
 import { useState, useEffect, useRef, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { userImg } from '~/Images';
 import SettingBox from '../SettingBox/SettingBox';
 import BoxUser from '../BoxUser/BoxUser';
+import Tippy from '@tippyjs/react/headless';
+import MusicItem from '../MusicItem/MusicItem';
+import axios from 'axios';
+import SingerItem from '../SingerItem/SingerItem';
 const cx = classNames.bind(styles);
 function Header() {
     const navigate = useNavigate();
@@ -21,20 +27,28 @@ function Header() {
     const backgroundRef = useRef();
     const ref1 = useRef();
     const ref2 = useRef();
+    const inputRef = useRef();
     const [, , renderAvata] = useContext(Context);
     const [avata, setAvata] = useState(userImg);
     const [showBox, setShowBox] = useState(false);
     const [showBoxUser, setShowBoxUser] = useState(false);
     const [showBoxLogin, setShowBoxLogin] = useState(false);
+    const [searchValue, setSearchValue] = useState('');
+    const [musics, setMusics] = useState([]);
+    const [singers, setSingers] = useState([]);
+    const debounce = useDebounce(searchValue, 700);
+    const [showResult, setShowResult] = useState(false);
     const user = JSON.parse(localStorage.getItem('user'));
     useEffect(() => {
         if (user && user.image) {
             setAvata(`http://localhost:4000/src/${user.image}`);
         }
-    }, [user, renderAvata]);
+        // eslint-disable-next-line
+    }, [renderAvata]);
     useEffect(() => {
         setShowBoxUser(false);
         setShowBox(false);
+        setShowResult(false);
     }, [location]);
     const handleShow = () => {
         if (user) {
@@ -42,8 +56,54 @@ function Header() {
         } else {
             setShowBoxLogin(!showBoxLogin);
         }
-        // setShowBox(false);
     };
+    const handleChange = (e) => {
+        const value = e.target.value;
+        if (!value.startsWith(' ')) {
+            setSearchValue(value);
+        }
+    };
+    useEffect(() => {
+        if (!debounce) {
+            setMusics([]);
+            return;
+        } else {
+            axios
+                .get('http://localhost:4000/api/music/searchNameMusic', {
+                    params: {
+                        musicName: debounce,
+                        limit: 5,
+                        name: 'views',
+                        sort: 'DESC',
+                    },
+                })
+                .then((res) => {
+                    setMusics(res.data.response.rows);
+                })
+                .catch(() => navigate('/error'));
+
+            axios
+                .get('http://localhost:4000/api/singer/searchSinger', {
+                    params: {
+                        singerName: debounce,
+                        limit: 5,
+                        name: 'singerName',
+                        sort: 'ASC',
+                    },
+                })
+                .then((res) => {
+                    setSingers(res.data.response.rows);
+                })
+                .catch(() => navigate('/error'));
+        }
+    }, [debounce, navigate]);
+    useEffect(() => {
+        if (!debounce) {
+            setMusics([]);
+            return;
+        } else {
+        }
+    }, [debounce]);
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (ref1.current && !ref1.current.contains(event.target)) setShowBox(false);
@@ -61,7 +121,7 @@ function Header() {
         const handleScroll = () => {
             if (backgroundRef.current) {
                 if (window.scrollY > 10) {
-                    backgroundRef.current.style.backgroundColor = 'rgba(23,15,35,0.8)';
+                    backgroundRef.current.style.backgroundColor = 'rgba(23,15,35,0.7)';
                 } else {
                     backgroundRef.current.style.backgroundColor = 'transparent';
                 }
@@ -69,6 +129,20 @@ function Header() {
         };
         window.addEventListener('scroll', handleScroll);
     }, []);
+    const handleClear = () => {
+        setShowResult(false);
+        setSearchValue('');
+        inputRef.current.focus();
+    };
+    const handleSearch = () => {
+        if (searchValue) {
+            navigate(`/search/${searchValue}`);
+            inputRef.current.blur();
+        }
+    };
+    const handleEnter = (e) => {
+        if (e.keyCode === 13) handleSearch();
+    };
     return (
         <div className={cx('wrapper')} ref={backgroundRef}>
             <div className={cx('left')}>
@@ -80,12 +154,62 @@ function Header() {
                         <FontAwesomeIcon icon={faArrowRightLong} />
                     </span>
                 </div>
-                <div className={cx('search')}>
-                    <span className={cx('icon-search')}>
-                        <FontAwesomeIcon icon={faMagnifyingGlass} />
-                    </span>
-                    <input type="text" className={cx('input')} placeholder="Tìm kiếm bài hát, nghệ sĩ,..." />
-                </div>
+                <Tippy
+                    interactive
+                    visible={showResult && debounce && (musics.length > 0 || singers.length > 0)}
+                    onClickOutside={() => setShowResult(false)}
+                    render={(attrs) => (
+                        <div className={cx('search-result')} tabIndex="-1" {...attrs}>
+                            <div className={cx('box-result')}>
+                                {musics.length > 0 && <p className={cx('title')}>Bài hát</p>}
+                                {musics.map((music, index) => {
+                                    return (
+                                        <MusicItem
+                                            key={index}
+                                            id={music.id}
+                                            music={music.musicName}
+                                            singer={music.singerInfo.singerName}
+                                            image={`http://localhost:4000/src/${music.image}`}
+                                        />
+                                    );
+                                })}
+                                {singers.length > 0 && musics.length > 0 && <div className={cx('line')}></div>}
+                                {singers.length > 0 && <p className={cx('title')}>Nghệ sĩ</p>}
+                                {singers.map((singer, index) => {
+                                    return (
+                                        <SingerItem
+                                            key={index}
+                                            singer={singer}
+                                            image={`http://localhost:4000/src/${singer.image}`}
+                                            onClick={() => navigate(`/singer/${singer.id}`)}
+                                        />
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    )}
+                >
+                    <div className={cx('search')}>
+                        <span className={cx('icon-search')} onClick={handleSearch}>
+                            <FontAwesomeIcon icon={faMagnifyingGlass} />
+                        </span>
+                        <input
+                            type="text"
+                            className={cx('input')}
+                            placeholder="Tìm kiếm bài hát, nghệ sĩ,..."
+                            value={searchValue}
+                            ref={inputRef}
+                            onChange={handleChange}
+                            onFocus={() => setShowResult(true)}
+                            onKeyDown={handleEnter}
+                        />
+                        {searchValue && (
+                            <span className={cx('icon-clear')} onClick={handleClear}>
+                                <FontAwesomeIcon icon={faXmark} />
+                            </span>
+                        )}
+                    </div>
+                </Tippy>
             </div>
             <div className={cx('right')}>
                 <div className={cx('download')}>

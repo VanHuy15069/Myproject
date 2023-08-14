@@ -49,3 +49,15 @@
     background-color: #130c1c;
     z-index: 999;
 }
+@media (max-width: 1131px) {
+    .sidebar {
+        width: 70px;
+    }
+    .header {
+        left: 70px;
+    }
+    .content {
+        margin-left: 70px;
+        padding: 0 29px;
+    }
+}

@@ -1,7 +1,6 @@
 import db from "../models";
 import path from "path";
 import fs from 'fs'
-import { rejects } from "assert";
 export const addNaionService = (nationName, image) =>
     new Promise(async(resolve, reject) => {
         try {
@@ -54,6 +53,45 @@ export const getAllNationService = () =>
     new Promise(async(resolve, reject) => {
         try {
             const nation = await db.Nation.findAll()
+            resolve({
+                response: nation,
+                err: 0,
+                msg: 'Get data succesfully'
+            })
+        } catch (error) {
+            reject(error)
+        }
+    })
+
+export const getOnlyService = (id, limit, name, sort) =>
+    new Promise(async(resolve, reject) => {
+        try {
+            if(!limit) limit =  5
+            if(!name) name = 'id'
+            if(!sort) sort = 'ASC'
+            const nation = await db.Nation.findByPk(id,{
+                include: [
+                    {
+                        model: db.Music,
+                        as: 'musicInfo',
+                        order: [[name, sort]],
+                        limit: Number(limit),
+                        include: [
+                            {
+                                model: db.Singer,
+                                as: 'singerInfo',
+                                attributes: ['id', 'singerName', 'image']
+                            }
+                        ]
+                    }
+                ]
+            })
+            if(!nation){
+                resolve({
+                    err: 2,
+                    msg: 'This data does not exist'
+                })
+            }
             resolve({
                 response: nation,
                 err: 0,

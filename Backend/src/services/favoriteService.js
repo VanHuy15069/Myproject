@@ -1,4 +1,4 @@
-import db, {sequelize} from "../models";
+import db from "../models";
 
 export const addFavoriteService = (userId, musicId) =>
     new Promise(async(resolve, reject) => {
@@ -94,6 +94,22 @@ export const isFavoriteService = (userId, musicId) =>
             resolve({
                 response: true,
                 msg: 'có'
+            })
+        } catch (error) {
+            reject(error)
+        }
+    })
+
+export const getFavoriteService = (musicId) => 
+    new Promise(async(resolve, reject) => {
+        try {
+            const favorite = await db.Favorite.findAndCountAll({
+                where: {musicId: musicId}
+            })
+            resolve({
+                response: favorite,
+                err: 0,
+                msg: 'OK'
             })
         } catch (error) {
             reject(error)

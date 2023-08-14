@@ -19,6 +19,8 @@ import PopularItem from '~/components/PopularItem/PopularItem';
 const cx = classNames.bind(styles);
 function Home() {
     const navigate = useNavigate();
+    const [numberSlide, setNumberSlide] = useState(3);
+    const [muiscLimit, setMusicLimit] = useState(12);
     const [sliers, setSliders] = useState([]);
     const [topMusics, setTopMusics] = useState([]);
     const [topics, setTopics] = useState([]);
@@ -37,8 +39,18 @@ function Home() {
         qt: false,
     });
     useEffect(() => {
+        if (window.innerWidth <= 1231) {
+            setNumberSlide(2);
+            setMusicLimit(8);
+        }
+    }, []);
+    useEffect(() => {
+        let limit = 5;
+        if (window.innerWidth <= 1231) limit = 4;
         axios
-            .get('http://localhost:4000/api/follow/getSingerPopular')
+            .get('http://localhost:4000/api/follow/getSingerPopular', {
+                params: { limit: limit },
+            })
             .then((res) => {
                 setSingerPopular(res.data.response);
             })
@@ -48,7 +60,7 @@ function Home() {
         axios
             .get('http://localhost:4000/api/music/getAllMusic', {
                 params: {
-                    limit: 12,
+                    limit: muiscLimit,
                     name: 'createdAt',
                     sort: 'DESC',
                 },
@@ -58,11 +70,11 @@ function Home() {
                 setNewMusics(res.data.response);
             })
             .catch(() => navigate('/error'));
-    }, [navigate]);
+    }, [navigate, muiscLimit]);
     useEffect(() => {
         axios
             .get('http://localhost:4000/api/nation/getVietNam', {
-                params: { limit: 12 },
+                params: { limit: muiscLimit },
             })
             .then((res) => {
                 if (res.data.err === 0) {
@@ -70,11 +82,11 @@ function Home() {
                 }
             })
             .catch(() => navigate('/error'));
-    }, [navigate]);
+    }, [navigate, muiscLimit]);
     useEffect(() => {
         axios
             .get('http://localhost:4000/api/nation/getInternational', {
-                params: { limit: 12 },
+                params: { limit: muiscLimit },
             })
             .then((res) => {
                 if (res.data.err === 0) {
@@ -82,7 +94,7 @@ function Home() {
                 }
             })
             .catch(() => navigate('/error'));
-    }, [navigate]);
+    }, [navigate, muiscLimit]);
     useEffect(() => {
         axios
             .get('http://localhost:4000/api/slider/getSlider')
@@ -92,10 +104,12 @@ function Home() {
             .catch(() => navigate('/error'));
     }, [navigate]);
     useEffect(() => {
+        let limit = 5;
+        if (window.innerWidth <= 1231) limit = 4;
         axios
             .get('http://localhost:4000/api/music/getAllMusic', {
                 params: {
-                    limit: 5,
+                    limit: limit,
                     name: 'views',
                     sort: 'DESC',
                 },
@@ -109,7 +123,7 @@ function Home() {
         axios
             .get('http://localhost:4000/api/topic/getAll')
             .then((res) => {
-                setTopics(res.data.response);
+                setTopics(res.data.response.rows);
             })
             .catch(() => navigate('/error'));
     }, [navigate]);
@@ -130,11 +144,13 @@ function Home() {
         }
     }, [navigate, topics]);
     useEffect(() => {
+        let limit = 5;
+        if (window.innerWidth <= 1231) limit = 4;
         if (topics.length > 1) {
             axios
                 .get(`http://localhost:4000/api/topic/getOnly/${topics[1].id}`, {
                     params: {
-                        limit: 5,
+                        limit: limit,
                         name: 'views',
                         sort: 'DESC',
                     },
@@ -146,11 +162,13 @@ function Home() {
         }
     }, [navigate, topics]);
     useEffect(() => {
+        let limit = 5;
+        if (window.innerWidth <= 1231) limit = 4;
         if (topics.length > 2) {
             axios
                 .get(`http://localhost:4000/api/topic/getOnly/${topics[2].id}`, {
                     params: {
-                        limit: 5,
+                        limit: limit,
                         name: 'views',
                         sort: 'DESC',
                     },
@@ -188,7 +206,7 @@ function Home() {
             <div className={cx('slider')}>
                 {sliers && (
                     <Swiper
-                        slidesPerView={3}
+                        slidesPerView={numberSlide}
                         spaceBetween={20}
                         loop={true}
                         speed={900}
@@ -308,7 +326,9 @@ function Home() {
                     <PopularItem image={Image.top100USUK} desc={'Top 100 nhạc Âu Mỹ hay nhất'} bold />
                     <PopularItem image={Image.top100EDM} desc={'Top 100 nhạc EDM hay nhất'} bold />
                     <PopularItem image={Image.top100KPop} desc={'Top 100 nhạc K-Pop hay nhất'} bold />
-                    <PopularItem image={Image.top100Violin} desc={'Top 100 nhạc Violin hay nhất'} bold />
+                    {window.innerWidth > 1231 && (
+                        <PopularItem image={Image.top100Violin} desc={'Top 100 nhạc Violin hay nhất'} bold />
+                    )}
                 </div>
             </div>
         </div>

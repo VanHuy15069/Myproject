@@ -61,7 +61,7 @@ function BoxUser({ user }) {
                             )}
                         </div>
                         {user.vip ? (
-                            <div className={cx('box')}>Vip</div>
+                            <div className={cx('box')}>Premium</div>
                         ) : (
                             <div className={cx('box', 'basic')}>Basic</div>
                         )}

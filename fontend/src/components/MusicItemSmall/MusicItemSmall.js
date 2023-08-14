@@ -45,7 +45,8 @@ function MusicItemSmall({ music, onClick, time = false }) {
                 .then((res) => setIsHeart(res.data.response))
                 .catch(() => navigate('/error'));
         }
-    }, [navigate, user, music.id, renderFavorite]);
+        // eslint-disable-next-line
+    }, [navigate, music.id, renderFavorite]);
     const handleAddFavorite = (e) => {
         e.stopPropagation();
         if (user) {
@@ -134,7 +135,7 @@ function MusicItemSmall({ music, onClick, time = false }) {
                 <div className={cx('content')}>
                     <div className={cx('title')}>
                         <p className={cx('name')}>{music.musicName}</p>
-                        {music.vip && <div className={cx('vip')}>vip</div>}
+                        {music.vip && <div className={cx('vip')}>Premium</div>}
                     </div>
                     <p className={cx('text')} onClick={(e) => e.stopPropagation()}>
                         <Link to={`/singer/${music.singerInfo.id}`} className={cx('singer')}>

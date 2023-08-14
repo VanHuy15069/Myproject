@@ -9,14 +9,9 @@ function SingerLibrary() {
     const [singers, setSingers] = useState([]);
     useEffect(() => {
         axios
-            .get(`http://localhost:4000/api/follow/getSinger/${user.id}`, {
-                params: {
-                    limit: 5,
-                },
-            })
+            .get(`http://localhost:4000/api/follow/getSinger/${user.id}`)
             .then((res) => {
                 setSingers(res.data.response);
-                console.log(res.data.response);
             })
             .catch((err) => console.log(err));
     }, [user.id]);

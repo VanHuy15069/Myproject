@@ -5,6 +5,7 @@
     width: 100%;
     padding: 10px;
     border-radius: 4px;
+    transition: all ease-out 0.3s;
     cursor: pointer;
     &.curentSong {
         background-color: hsla(0, 0%, 100%, 0.1);
@@ -44,16 +45,20 @@
     overflow: hidden;
     white-space: nowrap;
 }
+
 .vip {
-    margin-left: 4px;
-    background-color: yellow;
-    color: #333;
-    font-size: 1rem;
-    line-height: 1.2;
+    margin-left: 8px;
+    background-color: #e5ac1a;
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 700;
+    border-radius: 4px;
+    height: 12px;
+    line-height: 12px;
     padding: 0 4px;
-    border-radius: 3px;
     text-transform: uppercase;
 }
+
 .text {
     font-size: 1.2rem;
     font-weight: 400;
