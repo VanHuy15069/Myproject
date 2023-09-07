@@ -25,9 +25,12 @@ export const getOneUserService = (id) =>
 export const getAllUserService = () => 
     new Promise(async (resolve, reject) => {
         try {
-            const users = await db.User.findAll()
+            const users = await db.User.findAndCountAll({
+                where: {isAdmin: false}
+            })
             resolve({
-                response: users,
+                response: users.rows,
+                count: users.count,
                 err: 0,
                 msg: 'Successfully retrieved information'
             })

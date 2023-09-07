@@ -1,8 +1,8 @@
-import { log } from "console";
 import db, { Sequelize, sequelize } from "../models";
 import fs from 'fs'
 import path from "path";
 import { Op } from "sequelize";
+import moment from "moment";
 
 export const addMusicService = (data, image, link) => 
     new Promise(async(resolve, reject) => {
@@ -256,6 +256,7 @@ export const deleteMusicService = (id) =>
                     msg: 'This data does not exist'
                 })
             }
+            await db.Favorite.destroy({where: {musicId: id}})
             const clearMusic = path.resolve(__dirname, '..', '', `public/Images/${music.musicLink}`);
             const clearImage = path.resolve(__dirname, '..', '', `public/Images/${music.image}`)
             await music.destroy()
@@ -281,7 +282,7 @@ export const getAllMusicService = (limit, offset, name, sort) =>
             if(!sort) sort = 'ASC'
             if(name === 'musicName')  order.order = [[Sequelize.literal(`CONVERT(${name} USING utf8mb4) COLLATE utf8mb4_unicode_ci`), sort]]
             else order.order = [[name, sort]]
-            const music = await db.Music.findAll({
+            const music = await db.Music.findAndCountAll({
                 ...queries,
                 ...order,
                 include: [
@@ -304,7 +305,8 @@ export const getAllMusicService = (limit, offset, name, sort) =>
                 ]
             })
             resolve({
-                response: music,
+                response: music.rows,
+                count: music.count,
                 err: 0,
                 msg: 'Get data successfully'
             })
@@ -501,6 +503,174 @@ export const getTheSameMusicService = (categoryId, topicId, musicId, limit, name
                 response: musics,
                 err: 0,
                 msg: 'Get data OK'
+            })
+        } catch (error) {
+            reject(error)
+        }
+    })
+
+export const getMusicOfMonthService = (month) => 
+    new Promise(async(resolve, reject) => {
+        try {
+            const currentYear = moment().year();
+            const startOfMonth = new Date(currentYear, month - 1, 1);
+            const endOfMonth = new Date(currentYear, month, 0, 23, 59, 59, 999);
+            const topSong = await db.Music.findAll({
+                where: {
+                    createdAt: {[Op.between]: [startOfMonth, endOfMonth]}
+                },
+                order: [['createdAt', 'DESC']],
+                limit: 10,
+                include: [{
+                    model: db.Singer,
+                    as: 'singerInfo',
+                    attributes: ['singerName']
+                }]
+            })
+            const arr = []
+            for(const song of topSong){
+                const favorite = await db.Favorite.findAndCountAll({
+                    where: {musicId: song.id}
+                })
+                const obj = {}
+                obj.musicName = song.musicName
+                obj.image = song.image
+                obj.views = song.views
+                obj.favorite = favorite.count
+                obj.createdAt = song.createdAt
+                obj.singer = song.singerInfo.singerName
+                arr.push(obj)
+            }
+            resolve({
+                response: arr,
+                err: 0,
+                msg: 'OK'
+            })
+            
+        } catch (error) {
+            reject(error)
+        }
+    })
+
+export const countCategoryService = () =>
+    new Promise(async(resolve, reject) => {
+        try {
+            const categories = await db.Music.findAll({
+                attributes: ['categoryId', [Sequelize.fn('COUNT', Sequelize.col('categoryId')), 'count']],
+                group: ['categoryId'],
+                include: [{
+                    model: db.Category,
+                    as: 'categoryInfo',
+                    attributes: ['categoryName']
+                }]
+            })
+            const arr = []
+            for(const item of categories){
+                const obj = {}
+                obj.name = item.categoryInfo.categoryName
+                obj.count = item.dataValues.count
+                arr.push(obj)
+            }
+            resolve({
+                response: arr,
+                err: 0,
+                msg: "OK"
+            })
+        } catch (error) {
+            reject(error)
+        }
+    })
+
+export const countNationService = () => 
+    new Promise(async(resolve, reject) => {
+        try {
+            const nations = await db.Music.findAll({
+                attributes: ['nationId', [Sequelize.fn('COUNT', Sequelize.col('nationId')), 'count']],
+                group: ['nationId'],
+                include: [{
+                    model: db.Nation,
+                    as: 'nationInfo',
+                    attributes: ['nationName']
+                }]
+            })
+            const arr = []
+            for(const item of nations){
+                const obj = {}
+                obj.name = item.nationInfo.nationName
+                obj.count = item.dataValues.count
+                arr.push(obj)
+            }
+            resolve({
+                response: arr,
+                err: 0,
+                msg: "OK"
+            })
+        } catch (error) {
+            reject(error)
+        }
+    })
+
+    export const countTopicService = () => 
+    new Promise(async(resolve, reject) => {
+        try {
+            const topics = await db.Music.findAll({
+                attributes: ['topicId', [Sequelize.fn('COUNT', Sequelize.col('topicId')), 'count']],
+                group: ['topicId'],
+                include: [{
+                    model: db.Topic,
+                    as: 'topicInfo',
+                    attributes: ['title']
+                }]
+            })
+            const arr = []
+            for(const item of topics){
+                const obj = {}
+                obj.name = item.topicInfo.title
+                obj.count = item.dataValues.count
+                arr.push(obj)
+            }
+            resolve({
+                response: arr,
+                err: 0,
+                msg: "OK"
+            })
+        } catch (error) {
+            reject(error)
+        }
+    })
+
+export const getTopMusicService = (limit) =>
+    new Promise(async(resolve, reject) => {
+        try {
+            if(!limit) limit = 5
+            const musics = await db.Music.findAll({
+                attributes: ['id','musicName', 'image', 'views', 'createdAt'],
+                order: [['views', 'DESC']],
+                limit: Number(limit),
+                include: [{
+                    model: db.Singer,
+                    as: 'singerInfo',
+                    attributes: ['singerName']
+                }]
+            })
+            const arr  = []
+            for(const song of musics){
+                const favorite = await db.Favorite.findAndCountAll({
+                    where: {musicId: song.id}
+                })
+                const obj = {}
+                obj.musicName = song.musicName
+                obj.image = song.image
+                obj.views = song.views
+                obj.createdAt = song.createdAt
+                obj.singerName = song.singerInfo.singerName,
+                obj.favorite = favorite.count
+                arr.push(obj)
+            }
+            resolve({
+                response: arr,
+                err: 0,
+                msg: "OK"
             })
         } catch (error) {
             reject(error)

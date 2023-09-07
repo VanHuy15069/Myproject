@@ -43,6 +43,21 @@
     padding-right: 14px;
     cursor: pointer;
 }
+.msg {
+    position: fixed;
+    bottom: 90px;
+    left: 0;
+    animation: active ease-out 0.5s;
+    z-index: 999;
+}
+@keyframes active {
+    from {
+        transform: translateX(-100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
 @media (max-width: 1231px) {
     .item {
         width: 25%;

@@ -95,11 +95,36 @@ function MusicPage() {
             .catch(() => navigate('/error'));
     }, [params.id, navigate, reRender]);
     const handleAddSong = () => {
-        if (songId === music.id) {
-            setIsPlay(!isPlay);
-        } else setIsPlay(true);
-        localStorage.setItem('listMusic', JSON.stringify(listMusic));
-        setIsRender(!isRender);
+        const newList = [...listMusic];
+        if (user) {
+            if (music.vip) {
+                if (user.vip) {
+                } else {
+                    setShowBox(true);
+                }
+            } else {
+                if (songId === music.id) {
+                    setIsPlay(!isPlay);
+                } else setIsPlay(true);
+                localStorage.setItem('listMusic', JSON.stringify(listMusic));
+                setIsRender(!isRender);
+            }
+        } else {
+            if (music.vip) {
+                setShowBox(true);
+            } else {
+                if (songId === music.id) {
+                    setIsPlay(!isPlay);
+                } else setIsPlay(true);
+                const musicNotVip = newList.filter((song) => song.vip === false);
+                const index = musicNotVip.indexOf(music);
+                const afterList = musicNotVip.slice(index);
+                musicNotVip.splice(index, musicNotVip.length - index);
+                const listMusic = afterList.concat(musicNotVip);
+                localStorage.setItem('listMusic', JSON.stringify(listMusic));
+                setIsRender(!isRender);
+            }
+        }
     };
     const handleAddFavorite = (e) => {
         e.stopPropagation();
@@ -127,7 +152,7 @@ function MusicPage() {
             .then(() => {
                 setRenderFavorite(!renderFavorite);
                 setShowMSG(true);
-                setMsg('Đã xóa bài hát khỏi vào thư viện');
+                setMsg('Đã xóa bài hát khỏi thư viện');
                 setReRender(!reRender);
             })
             .catch(() => navigate('/error'));
@@ -183,14 +208,42 @@ function MusicPage() {
                 .catch(() => navigate('/error'));
         } else navigate('/login');
     };
-    const handleAddMusic = (song) => {
+    const handleAddMusic = (music) => {
         const newList = [...musicOfSinger];
-        const index = musicOfSinger.indexOf(song);
-        const afterList = newList.slice(index);
-        newList.splice(index, newList.length - index);
-        const listMusic = afterList.concat(newList);
-        localStorage.setItem('listMusic', JSON.stringify(listMusic));
-        setIsRender(!isRender);
+        if (user !== null) {
+            if (music.vip) {
+                if (user.vip) {
+                    const index = newList.indexOf(music);
+                    const afterList = newList.slice(index);
+                    newList.splice(index, newList.length - index);
+                    const listMusic = afterList.concat(newList);
+                    localStorage.setItem('listMusic', JSON.stringify(listMusic));
+                    setIsRender(!isRender);
+                } else {
+                    setShowBox(true);
+                }
+            } else {
+                const musicNotVip = newList.filter((song) => song.vip === false);
+                const index = musicNotVip.indexOf(music);
+                const afterList = musicNotVip.slice(index);
+                musicNotVip.splice(index, musicNotVip.length - index);
+                const listMusic = afterList.concat(musicNotVip);
+                localStorage.setItem('listMusic', JSON.stringify(listMusic));
+                setIsRender(!isRender);
+            }
+        } else {
+            if (music.vip) {
+                setShowBox(true);
+            } else {
+                const musicNotVip = newList.filter((song) => song.vip === false);
+                const index = musicNotVip.indexOf(music);
+                const afterList = musicNotVip.slice(index);
+                musicNotVip.splice(index, musicNotVip.length - index);
+                const listMusic = afterList.concat(musicNotVip);
+                localStorage.setItem('listMusic', JSON.stringify(listMusic));
+                setIsRender(!isRender);
+            }
+        }
     };
     return (
         <div className={cx('wrapper')}>

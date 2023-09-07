@@ -34,7 +34,7 @@ export const detailTopicService = (id, limit, offset, name, sort) =>
             if(limit) query.limit = Number(limit)
             if(offset) query.offset = Number(offset*limit)
             if(!name) name = 'id'
-            if(!sort) sort = 'ASC'
+            if(!sort) sort = 'DESC'
             const topic = await db.Topic.findByPk(id,{
                 include: [
                     {
@@ -140,6 +140,17 @@ export const deleteTopicService = (id) =>
                     err: 2,
                     msg: 'This data does not exist'
                 })
+            }
+            const musics = await db.Music.findAll({where: {topicId: id}})
+            if(musics){
+                musics.forEach(async music => {
+                    await db.Favorite.destroy({where: {musicId: music.id}})
+                    const clearImg = path.resolve(__dirname, '..', '', `public/Images/${music.image}`);
+                    const clearMusic = path.resolve(__dirname, '..', '', `public/Images/${music.musicLink}`);
+                    fs.unlinkSync(clearImg)
+                    fs.unlinkSync(clearMusic)
+                })
+                await db.Music.destroy({where: {topicId: id}})
             }
             const clearImg = path.resolve(__dirname, '..', '', `public/Images/${topic.image}`);
             await topic.destroy()

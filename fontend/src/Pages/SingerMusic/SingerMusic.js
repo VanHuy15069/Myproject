@@ -1,10 +1,9 @@
 import classNames from 'classnames/bind';
 import styles from './SingerMusic.module.scss';
-import { Context } from '~/Provider/Provider';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDown, faAngleUp, faArrowUpWideShort } from '@fortawesome/free-solid-svg-icons';
-import { useState, useRef, useEffect, useContext } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import MusicOfSinger from '~/components/MusicOfSinger/MusicOfSinger';
 const cx = classNames.bind(styles);
@@ -12,7 +11,6 @@ function SingerMusic() {
     const params = useParams();
     const navigate = useNavigate();
     const boxRef = useRef();
-    const [isRender, setIsRender] = useContext(Context);
     const [show, setShow] = useState(false);
     const [text, setText] = useState('Nổi bật');
     const [singer, setSinger] = useState({});
@@ -50,15 +48,6 @@ function SingerMusic() {
         setText('Mới nhất');
         setSort('createdAt');
         setShow(false);
-    };
-    const handleAddSong = (song) => {
-        const newList = [...musics];
-        const index = musics.indexOf(song);
-        const afterList = newList.slice(index);
-        newList.splice(index, newList.length - index);
-        const listMusic = afterList.concat(newList);
-        localStorage.setItem('listMusic', JSON.stringify(listMusic));
-        setIsRender(!isRender);
     };
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -99,7 +88,7 @@ function SingerMusic() {
                     {musics.map((music, index) => {
                         return (
                             <div key={index} className={cx('item-music')}>
-                                <MusicOfSinger music={music} time onClick={() => handleAddSong(music)} />
+                                <MusicOfSinger music={music} time list={musics} />
                             </div>
                         );
                     })}

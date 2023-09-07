@@ -99,6 +99,7 @@ function NationPage() {
                     </div>
                 )}
                 <div className={cx('list')}>
+                    <div className={cx('title')}>Nghệ Sĩ</div>
                     <div className={cx('hot-songs')}>
                         {singers.map((singer, index) => {
                             return (

@@ -73,6 +73,7 @@ function Login() {
                         } else {
                             navigate('/');
                         }
+                        localStorage.removeItem('listMusic');
                         window.location.reload();
                     } else {
                         setCheck('Tên đăng nhập hoặc mật khẩu không chính xác!');

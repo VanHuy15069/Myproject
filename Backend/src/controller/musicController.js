@@ -261,3 +261,71 @@ export const getTheSameMusic = async(req, res) => {
         })
     }
 }
+
+export const getMusicOfMonth = async (req, res) => {
+    try {
+        const month = req.query.month
+        if(!month){
+            return res.status(404).json({
+                err: 1,
+                msg: 'Full information is required'
+            })
+        }
+        const response = await musicService.getMusicOfMonthService(month)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(500).json({
+            err: -1,
+            msg: 'failure' + error
+        })
+    }
+}
+
+export const countCategory = async(req, res) => {
+    try {
+        const response = await musicService.countCategoryService()
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(500).json({
+            err: -1,
+            msg: 'failure' + error
+        })
+    }
+}
+
+export const countNation = async(req, res) => {
+    try {
+        const response = await musicService.countNationService()
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(500).json({
+            err: -1,
+            msg: 'failure' + error
+        })
+    }
+}
+
+export const countTopic = async(req, res) => {
+    try {
+        const response = await musicService.countTopicService()
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(500).json({
+            err: -1,
+            msg: 'failure' + error
+        })
+    }
+}
+
+export const getTopMusic = async (req, res) => {
+    try {
+        const limit = req.query.limit
+        const response = await musicService.getTopMusicService(limit)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(500).json({
+            err: -1,
+            msg: 'failure' + error
+        })
+    }
+}

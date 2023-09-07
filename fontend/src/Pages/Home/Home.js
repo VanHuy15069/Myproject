@@ -15,10 +15,13 @@ import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import MusicItemSmall from '~/components/MusicItemSmall/MusicItemSmall';
 import * as Image from '~/Images';
 import PopularItem from '~/components/PopularItem/PopularItem';
+import BoxMSG from '~/components/BoxMSG/BoxMSG';
+import PoperWrapper from '~/components/PoperWrapper/PoperWrapper';
 
 const cx = classNames.bind(styles);
 function Home() {
     const navigate = useNavigate();
+    const user = JSON.parse(localStorage.getItem('user'));
     const [numberSlide, setNumberSlide] = useState(3);
     const [muiscLimit, setMusicLimit] = useState(12);
     const [sliers, setSliders] = useState([]);
@@ -32,6 +35,9 @@ function Home() {
     const [newMusics, setNewMusics] = useState([]);
     const [newMusicQT, setNewMusicQT] = useState([]);
     const [singerPopular, setSingerPopular] = useState([]);
+    const [showMSG, setShowMSG] = useState(false);
+    const [msg, setMsg] = useState('');
+    const [showBox, setShowBox] = useState(false);
     const [isRender, setIsRender] = useContext(Context);
     const [active, setActive] = useState({
         all: true,
@@ -133,7 +139,7 @@ function Home() {
                 .get(`http://localhost:4000/api/topic/getOnly/${topics[0].id}`, {
                     params: {
                         limit: 5,
-                        name: 'views',
+                        name: 'createdAt',
                         sort: 'DESC',
                     },
                 })
@@ -151,7 +157,7 @@ function Home() {
                 .get(`http://localhost:4000/api/topic/getOnly/${topics[1].id}`, {
                     params: {
                         limit: limit,
-                        name: 'views',
+                        name: 'createdAt',
                         sort: 'DESC',
                     },
                 })
@@ -169,7 +175,7 @@ function Home() {
                 .get(`http://localhost:4000/api/topic/getOnly/${topics[2].id}`, {
                     params: {
                         limit: limit,
-                        name: 'views',
+                        name: 'createdAt',
                         sort: 'DESC',
                     },
                 })
@@ -192,14 +198,56 @@ function Home() {
         setNewMusics(newMusicQT);
         setActive({ all: false, vn: false, qt: true });
     };
-    const handleAddSong = (song) => {
+    const handleAddSong = (music) => {
         const newList = [...newMusics];
-        const index = newMusics.indexOf(song);
-        const afterList = newList.slice(index);
-        newList.splice(index, newList.length - index);
-        const listMusic = afterList.concat(newList);
-        localStorage.setItem('listMusic', JSON.stringify(listMusic));
-        setIsRender(!isRender);
+        if (user !== null) {
+            if (music.vip) {
+                if (user.vip) {
+                    const index = newList.indexOf(music);
+                    const afterList = newList.slice(index);
+                    newList.splice(index, newList.length - index);
+                    const listMusic = afterList.concat(newList);
+                    localStorage.setItem('listMusic', JSON.stringify(listMusic));
+                    setIsRender(!isRender);
+                } else {
+                    setShowBox(true);
+                }
+            } else {
+                const musicNotVip = newList.filter((song) => song.vip === false);
+                const index = musicNotVip.indexOf(music);
+                const afterList = musicNotVip.slice(index);
+                musicNotVip.splice(index, musicNotVip.length - index);
+                const listMusic = afterList.concat(musicNotVip);
+                localStorage.setItem('listMusic', JSON.stringify(listMusic));
+                setIsRender(!isRender);
+            }
+        } else {
+            if (music.vip) {
+                setShowBox(true);
+            } else {
+                const musicNotVip = newList.filter((song) => song.vip === false);
+                const index = musicNotVip.indexOf(music);
+                const afterList = musicNotVip.slice(index);
+                musicNotVip.splice(index, musicNotVip.length - index);
+                const listMusic = afterList.concat(musicNotVip);
+                localStorage.setItem('listMusic', JSON.stringify(listMusic));
+                setIsRender(!isRender);
+            }
+        }
+    };
+    const handleUpgrade = () => {
+        if (user) {
+            axios
+                .patch(`http://localhost:4000/api/user/upgrade/${user.id}`)
+                .then((res) => {
+                    setShowBox(false);
+                    setShowMSG(true);
+                    setMsg('Tài khoản đã được nâng cấp');
+                    console.log(res.data.response);
+                    localStorage.setItem('user', JSON.stringify(res.data.response));
+                })
+                .catch(() => navigate('/error'));
+        } else navigate('/login');
     };
     return (
         <div className={cx('wrapper')}>
@@ -331,6 +379,18 @@ function Home() {
                     )}
                 </div>
             </div>
+            {showMSG && (
+                <div
+                    className={cx('msg')}
+                    onClick={(e) => {
+                        setShowMSG(false);
+                        e.stopPropagation();
+                    }}
+                >
+                    <BoxMSG>{msg}</BoxMSG>
+                </div>
+            )}
+            {showBox && <PoperWrapper onClickHide={() => setShowBox(false)} onClickBtn={handleUpgrade} />}
         </div>
     );
 }

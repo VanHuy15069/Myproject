@@ -154,6 +154,19 @@ export const deleteNationService = (id) =>
                     msg: 'This data does not exist'
                 })
             }
+            const musics = await db.Music.findAll({where: {nationId: id}})
+            if(musics){
+                if(musics){
+                    musics.forEach(async music => {
+                        await db.Favorite.destroy({where: {musicId: music.id}})
+                        const clearImg = path.resolve(__dirname, '..', '', `public/Images/${music.image}`);
+                        const clearMusic = path.resolve(__dirname, '..', '', `public/Images/${music.musicLink}`);
+                        fs.unlinkSync(clearImg)
+                        fs.unlinkSync(clearMusic)
+                    })
+                    await db.Music.destroy({where: {nationId: id}})
+                }
+            }
             const clearImg = path.resolve(__dirname, '..', '', `public/Images/${nation.image}`);
             await nation.destroy()
             fs.unlinkSync(clearImg)

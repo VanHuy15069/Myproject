@@ -14,6 +14,7 @@ function SearchPage() {
     const navigate = useNavigate();
     const [musics, setMusics] = useState([]);
     const [singers, setSingers] = useState([]);
+    const [name, setName] = useState('views');
     const [action, setAction] = useState({
         all: true,
         music: false,
@@ -26,7 +27,7 @@ function SearchPage() {
             .get('http://localhost:4000/api/music/searchNameMusic', {
                 params: {
                     musicName: params.key,
-                    name: 'views',
+                    name: name,
                     sort: 'DESC',
                 },
             })
@@ -47,12 +48,14 @@ function SearchPage() {
                 setSingers(res.data.response.rows);
             })
             .catch(() => navigate('/error'));
-    }, [params.key, navigate]);
+    }, [params.key, navigate, name]);
     const handleAll = () => {
         setAction({ all: true, music: false, singer: false });
+        setName('views');
     };
     const handleMusic = () => {
         setAction({ all: false, music: true, singer: false });
+        setName('createdAt');
     };
     const handleSinger = () => {
         setAction({ all: false, music: false, singer: true });

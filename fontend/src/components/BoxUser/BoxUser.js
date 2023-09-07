@@ -29,6 +29,7 @@ function BoxUser({ user }) {
         setIsLogin(false);
         navigate('/');
         localStorage.removeItem('user');
+        localStorage.removeItem('listMusic');
         window.location.reload();
     };
     const handleUpgrade = () => {

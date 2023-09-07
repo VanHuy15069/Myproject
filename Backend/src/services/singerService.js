@@ -85,6 +85,18 @@ export const deleteSingerService = (id) =>
                     msg: 'This data does not exist'
                 })
             }
+            const musics = await db.Music.findAll({where: {singerId: id}})
+            if(musics){
+                musics.forEach(async music => {
+                    await db.Favorite.destroy({where: {musicId: music.id}})
+                    const clearImg = path.resolve(__dirname, '..', '', `public/Images/${music.image}`);
+                    const clearMusic = path.resolve(__dirname, '..', '', `public/Images/${music.musicLink}`);
+                    fs.unlinkSync(clearImg)
+                    fs.unlinkSync(clearMusic)
+                })
+                await db.Music.destroy({where: {singerId: id}})
+            }
+            await db.Follow.destroy({where: {singerId: id}})
             const clearImg = path.resolve(__dirname, '..', '', `public/Images/${singer.image}`);
             await singer.destroy()
             fs.unlinkSync(clearImg)
@@ -120,9 +132,10 @@ export const getOneSingerService = (id) =>
 export const getAllSingerService = () => 
     new Promise(async (resolve, reject) => {
         try {
-            const singers = await db.Singer.findAll()
+            const singers = await db.Singer.findAndCountAll()
             resolve({
-                response: singers,
+                response: singers.rows,
+                count: singers.count,
                 err: 0,
                 msg: 'Successfully retrieved information'
             })

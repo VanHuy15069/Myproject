@@ -83,7 +83,8 @@ export const deleteCategoryService = (id) =>
                 where: {categoryId: id}
             })
             if(musics){
-                musics.forEach(music => {
+                musics.forEach(async music => {
+                    await db.Favorite.destroy({where: {musicId: music.id}})
                     const clearImg = path.resolve(__dirname, '..', '', `public/Images/${music.image}`);
                     const clearMusic = path.resolve(__dirname, '..', '', `public/Images/${music.musicLink}`);
                     fs.unlinkSync(clearImg)
