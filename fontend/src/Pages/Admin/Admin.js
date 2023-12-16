@@ -1,7 +1,7 @@
 import classNames from 'classnames/bind';
 import styles from './Admin.module.scss';
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Chart from '~/components/Chart/Chart';
 import ChartCircel from '~/components/PieChart/PieChart';
@@ -71,19 +71,25 @@ function Admin() {
         <div className={cx('wrapper')}>
             <div className={cx('list-cart')}>
                 <div className={cx('item')}>
-                    <div className={cx('cart')}>
-                        <h2>{musics} bài hát</h2>
-                    </div>
+                    <Link to={'/admin/music'}>
+                        <div className={cx('cart')}>
+                            <h2>{musics} bài hát</h2>
+                        </div>
+                    </Link>
                 </div>
                 <div className={cx('item')}>
-                    <div className={cx('cart', 'red')}>
-                        <h2>{singers} ca sĩ</h2>
-                    </div>
+                    <Link to={'/admin/singer'}>
+                        <div className={cx('cart', 'red')}>
+                            <h2>{singers} ca sĩ</h2>
+                        </div>
+                    </Link>
                 </div>
                 <div className={cx('item')}>
-                    <div className={cx('cart', 'green')}>
-                        <h2>{users} người dùng</h2>
-                    </div>
+                    <Link to={'/admin/user'}>
+                        <div className={cx('cart', 'green')}>
+                            <h2>{users} người dùng</h2>
+                        </div>
+                    </Link>
                 </div>
             </div>
             <div className={cx('chart')}>
@@ -143,7 +149,7 @@ function Admin() {
                                     </div>
                                 </div>
                                 <div className={cx('action')}>
-                                    <span className={cx('icon')}>
+                                    <span className={cx('icon', 'views')}>
                                         <FontAwesomeIcon icon={faHeadphones} />
                                         <p>{song.views}</p>
                                     </span>

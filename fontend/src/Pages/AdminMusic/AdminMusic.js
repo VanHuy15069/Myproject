@@ -19,6 +19,10 @@ import BoxMSG from '~/components/BoxMSG/BoxMSG';
 import axios from 'axios';
 import Search from '~/components/Search/Search';
 import BoxDelete from '~/components/BoxDelete/BoxDelete';
+import Swal from 'sweetalert2';
+import 'sweetalert2/src/sweetalert2.scss'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const cx = classNames.bind(styles);
 function AdminMusic() {
@@ -252,14 +256,13 @@ function AdminMusic() {
                     .post('http://localhost:4000/api/music/addMusic', formData)
                     .then(() => {
                         setShowBox(false);
+                        toast.success("Đã thêm một bài hát!")
                         setImgUpload();
                         setMusicUpload();
                         setCheck('');
                         setImage();
                         setLinkMusic();
                         setDataSelcet({ categoryId: categories[0].id, topicId: topics[0].id, nationId: nations[0].id });
-                        setShowMSG(true);
-                        setMsg('Thêm bài hát thành công');
                         setRender(!render);
                         setSinger({});
                     })
@@ -278,12 +281,19 @@ function AdminMusic() {
                             ...dataSelect,
                         })
                         .then(() => {
-                            setShowMSG(true);
-                            setMsg('Cập nhật bài hát thành công');
                             setShowBox(false);
                             setCheck('');
                             setRender(!render);
-                        })
+                            toast.success("Bài hát đã được cập nhật!")
+                            Swal.fire(
+                                {
+                                    title: 'Bài hát đã được cập nhật!',
+                                    icon: 'success',
+                                    width: 500,
+                                    height: 400,
+                                }
+                              )
+                            })
                         .catch((err) => console.log(err));
                 }
                 if (image) {
@@ -292,8 +302,6 @@ function AdminMusic() {
                     axios
                         .patch(`http://localhost:4000/api/music/updateImage/${id}`, formData)
                         .then(() => {
-                            setShowMSG(true);
-                            setMsg('Cập nhật bài hát thành công');
                             setShowBox(false);
                             setCheck('');
                             setRender(!render);
@@ -568,6 +576,7 @@ function AdminMusic() {
                     onClickOK={handleDelete}
                 />
             )}
+            <ToastContainer autoClose={3000} closeOnClick theme='dark'/>
         </div>
     );
 }

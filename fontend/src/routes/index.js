@@ -21,6 +21,7 @@ import TopicPage from '~/Pages/TopicPage/TopicPage';
 import NationPage from '~/Pages/NationPage/NationPage';
 import SearchPage from '~/Pages/SearchPage/SearchPage';
 import MusicPage from '~/Pages/MusicPage/MusicPage';
+import AdminUser from '~/Pages/AdminUser/AdminUser';
 
 export const publicRouter = [
     { path: '/', component: Home },
@@ -50,4 +51,5 @@ export const adminRouter = [
     { path: '/admin/category', component: AdminCategory },
     { path: '/admin/singer', component: AdminSinger },
     { path: '/admin/music', component: AdminMusic },
+    { path: '/admin/user', component: AdminUser },
 ];

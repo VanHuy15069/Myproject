@@ -59,13 +59,22 @@ function MusicItemSearch({ music, list }) {
                     setShowBox(true);
                 }
             } else {
-                const musicNotVip = newList.filter((song) => song.vip === false);
-                const index = musicNotVip.indexOf(music);
-                const afterList = musicNotVip.slice(index);
-                musicNotVip.splice(index, musicNotVip.length - index);
-                const listMusic = afterList.concat(musicNotVip);
-                localStorage.setItem('listMusic', JSON.stringify(listMusic));
-                setIsRender(!isRender);
+                if (user.vip) {
+                    const index = list.indexOf(music);
+                    const afterList = newList.slice(index);
+                    newList.splice(index, newList.length - index);
+                    const listMusic = afterList.concat(newList);
+                    localStorage.setItem('listMusic', JSON.stringify(listMusic));
+                    setIsRender(!isRender);
+                } else {
+                    const musicNotVip = newList.filter((song) => song.vip === false);
+                    const index = musicNotVip.indexOf(music);
+                    const afterList = musicNotVip.slice(index);
+                    musicNotVip.splice(index, musicNotVip.length - index);
+                    const listMusic = afterList.concat(musicNotVip);
+                    localStorage.setItem('listMusic', JSON.stringify(listMusic));
+                    setIsRender(!isRender);
+                }
             }
         } else {
             if (music.vip) {

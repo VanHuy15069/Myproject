@@ -15,12 +15,6 @@ function Category() {
     const [topicAll, setTopicAll] = useState([]);
     const [idBanner, setIdBanner] = useState([0]);
     const [nations, setNations] = useState([]);
-    const [topicLimit, setTopicLimit] = useState(8);
-    useEffect(() => {
-        if (window.innerWidth <= 1231) {
-            setTopicLimit(6);
-        }
-    }, []);
     useEffect(() => {
         let limit = 5;
         if (window.innerWidth <= 1231) limit = 4;
@@ -44,17 +38,19 @@ function Category() {
             .catch(() => navigate('/error'));
     }, [navigate]);
     useEffect(() => {
+        let limit = 8;
+        if (window.innerWidth <= 1231) limit = 6;
         axios
             .get('http://localhost:4000/api/topic/getAll', {
                 params: {
-                    topicLimit: topicLimit,
+                    topicLimit: limit,
                 },
             })
             .then((res) => {
                 setTopic(res.data.response.rows);
             })
             .catch(() => navigate('/error'));
-    }, [navigate, topicLimit]);
+    }, [navigate]);
     useEffect(() => {
         axios
             .get('http://localhost:4000/api/topic/getAll')

@@ -517,7 +517,7 @@ export const getMusicOfMonthService = (month) =>
             const endOfMonth = new Date(currentYear, month, 0, 23, 59, 59, 999);
             const topSong = await db.Music.findAll({
                 where: {
-                    createdAt: {[Op.between]: [startOfMonth, endOfMonth]}
+                    createdAt: {[Op.between]: [startOfMonth, endOfMonth], }
                 },
                 order: [['createdAt', 'DESC']],
                 limit: 10,

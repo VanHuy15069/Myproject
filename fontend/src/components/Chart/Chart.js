@@ -34,7 +34,7 @@ function Chart({ data }) {
     };
     return (
         <LineChart
-            width={1200}
+            width={1250}
             height={500}
             data={data}
             margin={{

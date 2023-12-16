@@ -190,9 +190,9 @@ function Header() {
                     )}
                 >
                     <div className={cx('search')}>
-                        <span className={cx('icon-search')} onClick={handleSearch}>
+                        <button className={cx('icon-search')} onClick={handleSearch}>
                             <FontAwesomeIcon icon={faMagnifyingGlass} />
-                        </span>
+                        </button>
                         <input
                             type="text"
                             className={cx('input')}

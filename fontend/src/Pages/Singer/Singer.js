@@ -169,18 +169,31 @@ function Singer() {
                     setShowBox(true);
                 }
             } else {
-                if (index !== -1) {
-                    const afterList = newList.slice(index);
-                    newList.splice(index, newList.length - index);
-                    const listMusic = afterList.concat(newList);
-                    const musicsNotVip = listMusic.filter((item) => item.vip === false);
-                    localStorage.setItem('listMusic', JSON.stringify(musicsNotVip));
+                if (user.vip) {
+                    if (index !== -1) {
+                        const afterList = newList.slice(index);
+                        newList.splice(index, newList.length - index);
+                        const listMusic = afterList.concat(newList);
+                        localStorage.setItem('listMusic', JSON.stringify(listMusic));
+                    } else {
+                        newList.unshift(song);
+                        localStorage.setItem('listMusic', JSON.stringify(newList));
+                    }
+                    setIsRender(!isRender);
                 } else {
-                    const musicsNotVip = newList.filter((item) => item.vip === false);
-                    musicsNotVip.unshift(song);
-                    localStorage.setItem('listMusic', JSON.stringify(musicsNotVip));
+                    if (index !== -1) {
+                        const afterList = newList.slice(index);
+                        newList.splice(index, newList.length - index);
+                        const listMusic = afterList.concat(newList);
+                        const musicsNotVip = listMusic.filter((item) => item.vip === false);
+                        localStorage.setItem('listMusic', JSON.stringify(musicsNotVip));
+                    } else {
+                        const musicsNotVip = newList.filter((item) => item.vip === false);
+                        musicsNotVip.unshift(song);
+                        localStorage.setItem('listMusic', JSON.stringify(musicsNotVip));
+                    }
+                    setIsRender(!isRender);
                 }
-                setIsRender(!isRender);
             }
         } else {
             if (song.vip) {

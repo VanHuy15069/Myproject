@@ -21,12 +21,12 @@ export const getOneUserService = (id) =>
             reject(error)
         }
     })
-
 export const getAllUserService = () => 
     new Promise(async (resolve, reject) => {
         try {
             const users = await db.User.findAndCountAll({
-                where: {isAdmin: false}
+                where: {isAdmin: false},
+                attributes: ['id', 'fullName', 'email', 'userName', 'image', 'vip']
             })
             resolve({
                 response: users.rows,
@@ -93,7 +93,13 @@ export const deleteUserService = (id) =>
                 err: -1,
                 msg: 'This user does not exist'
             })
+        }  
+        if(user.image){
+            const clearImg = path.resolve(__dirname, '..', '', `public/Images/${user.image}`);
+            fs.unlinkSync(clearImg)
         }
+        await db.Favorite.destroy({where: {userId: id}})
+        await db.Follow.destroy({where: {userId: id}})
         await user.destroy()
         resolve({
             err: 0,

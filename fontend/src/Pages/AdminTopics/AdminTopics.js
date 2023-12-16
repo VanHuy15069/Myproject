@@ -263,7 +263,7 @@ function AdminTopics() {
             )}
             {showBoxDelete && (
                 <BoxDelete
-                    msg={'Xấc nhận xóa chủ đề này'}
+                    msg={'Xác nhận xóa chủ đề này'}
                     onClickCancle={() => setShowBoxDelete(false)}
                     onClickOK={handleDelete}
                 />

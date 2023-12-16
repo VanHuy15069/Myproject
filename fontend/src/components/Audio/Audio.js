@@ -278,7 +278,7 @@ function Audio() {
         if (showMSG) {
             timer = setTimeout(() => {
                 setShowMSG(false);
-            }, 3000);
+            }, 6000);
         }
         return () => clearTimeout(timer);
     }, [showMSG]);
@@ -299,11 +299,11 @@ function Audio() {
             )}
             <div className={cx('conatiner')}>
                 <div className={cx('music-info')}>
-                    <div className={cx('image')}>
+                    <div className={cx('image')} onClick={() => navigate(`/song/${currentSong.id}`)}>
                         {currentSong.image && <img src={`http://localhost:4000/src/${currentSong.image}`} alt="" />}
                     </div>
                     <div className={cx('info')}>
-                        <div className={cx('music')}>{currentSong.musicName}</div>
+                        <div className={cx('music')} onClick={() => navigate(`/song/${currentSong.id}`)}>{currentSong.musicName}</div>
                         {currentSong.singerInfo && (
                             <div
                                 className={cx('singer')}

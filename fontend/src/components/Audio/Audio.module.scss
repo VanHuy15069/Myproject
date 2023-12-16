@@ -20,6 +20,7 @@
     border-radius: 4px;
     overflow: hidden;
     margin-right: 10px;
+    cursor: pointer;
     & img {
         height: 100%;
         width: 100%;
@@ -33,6 +34,7 @@
     text-overflow: clip;
     overflow: visible;
     text-transform: capitalize;
+    cursor: pointer;
 }
 .singer {
     color: hsla(0, 0%, 100%, 0.5);
@@ -100,7 +102,7 @@
 .range {
     flex: 1;
     margin: 0 10px;
-    height: 3px;
+    height: 2px;
     border-radius: 4px;
     -webkit-appearance: none;
     appearance: none;
@@ -109,6 +111,9 @@
     background: linear-gradient(to right, #fff 0%, #fff 0%, hsla(0, 0%, 100%, 0.3) 0%, hsla(0, 0%, 100%, 0.3) 100%);
     overflow: hidden;
     cursor: pointer;
+    &:hover {
+        height: 3px;
+    }
     &.volum-range {
         flex: none;
         width: 70px;
@@ -121,8 +126,6 @@
         box-shadow: -400px 0 0 400px #fff;
     }
     &::-webkit-slider-runnable-track {
-        // box-shadow: 0, 0, 10px, 10px rgba(0, 0, 0, 0.9);
-        // border: none;
         height: 30px;
     }
 }
