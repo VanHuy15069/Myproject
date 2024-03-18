@@ -29,7 +29,6 @@ function Chart({ data }) {
                 </div>
             );
         }
-
         return null;
     };
     return (
@@ -39,18 +38,18 @@ function Chart({ data }) {
             data={data}
             margin={{
                 top: 5,
-                right: 30,
-                left: 20,
+                right: 20,
+                left: 30,
                 bottom: 5,
             }}
         >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="musicName" />
+            <CartesianGrid strokeDasharray="2 2" />
+            <XAxis dataKey="musicName" tick={{ fill: '#8b45ca' }} />
             <YAxis />
             <Tooltip content={<CustomTooltip />} cursor={{ fill: '#fff' }} />
             <Legend />
-            <Line type="monotone" dataKey="views" stroke="#8884d8" activeDot={{ r: 8 }} />
-            <Line type="monotone" dataKey="favorite" stroke="#82ca9d" />
+            <Line type="monotone" dataKey="views" stroke="#8884d8" activeDot={{ r: 6 }} />
+            <Line type="monotone" dataKey="favorite" stroke="#82ca9d" activeDot={{ r: 6 }} />
         </LineChart>
     );
 }

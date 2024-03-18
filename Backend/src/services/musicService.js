@@ -520,7 +520,7 @@ export const getMusicOfMonthService = (month) =>
                     createdAt: {[Op.between]: [startOfMonth, endOfMonth], }
                 },
                 order: [['createdAt', 'DESC']],
-                limit: 10,
+                limit: 9,
                 include: [{
                     model: db.Singer,
                     as: 'singerInfo',

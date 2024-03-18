@@ -25,7 +25,7 @@ function Audio() {
     const user = JSON.parse(localStorage.getItem('user'));
     const playList = JSON.parse(localStorage.getItem('listMusic'));
     const navigate = useNavigate();
-    const [render, setRender, , , renderFavorite, setRenderFavorite, , setSongId, isPlay, setIsPlay] =
+    const [render, setRender, , , renderFavorite, setRenderFavorite, songId, setSongId, isPlay, setIsPlay] =
         useContext(Context);
     const audioRef = useRef();
     const volumRef = useRef();
@@ -220,14 +220,14 @@ function Audio() {
             timer = setTimeout(() => {
                 axios
                     .patch(`http://localhost:4000/api/music/countViews/${currentSong.id}`)
-                    // .then(() => console.log('ok'))
+                    // .then(() => console.log('+1'))
                     .catch(() => navigate('/error'));
             }, 30000);
         };
         if (isPlay) viewedMusic();
         return () => clearTimeout(timer);
         // eslint-disable-next-line
-    }, [currentSong, isViewed, viewLoop, navigate]);
+    }, [currentSong, songId, isViewed, viewLoop, navigate]);
     useEffect(() => {
         if (musicRef.current) {
             if (isPlay) musicRef.current.play();
@@ -303,7 +303,9 @@ function Audio() {
                         {currentSong.image && <img src={`http://localhost:4000/src/${currentSong.image}`} alt="" />}
                     </div>
                     <div className={cx('info')}>
-                        <div className={cx('music')} onClick={() => navigate(`/song/${currentSong.id}`)}>{currentSong.musicName}</div>
+                        <div className={cx('music')} onClick={() => navigate(`/song/${currentSong.id}`)}>
+                            {currentSong.musicName}
+                        </div>
                         {currentSong.singerInfo && (
                             <div
                                 className={cx('singer')}

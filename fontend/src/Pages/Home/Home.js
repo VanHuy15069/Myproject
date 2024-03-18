@@ -17,6 +17,7 @@ import * as Image from '~/Images';
 import PopularItem from '~/components/PopularItem/PopularItem';
 import BoxMSG from '~/components/BoxMSG/BoxMSG';
 import PoperWrapper from '~/components/PoperWrapper/PoperWrapper';
+import { useRef } from 'react';
 
 const cx = classNames.bind(styles);
 function Home() {
@@ -39,6 +40,7 @@ function Home() {
     const [msg, setMsg] = useState('');
     const [showBox, setShowBox] = useState(false);
     const [isRender, setIsRender] = useContext(Context);
+    const ref = useRef()
     const [active, setActive] = useState({
         all: true,
         vn: false,
@@ -50,6 +52,7 @@ function Home() {
             setMusicLimit(8);
         }
     }, []);
+
     useEffect(() => {
         let limit = 5;
         if (window.innerWidth <= 1231) limit = 4;
@@ -258,6 +261,10 @@ function Home() {
                 .catch(() => navigate('/error'));
         } else navigate('/login');
     };
+    if(ref.current){
+
+        console.log(ref.current.width);
+    }
     return (
         <div className={cx('wrapper')}>
             <div className={cx('slider')}>
@@ -277,6 +284,7 @@ function Home() {
                             return (
                                 <SwiperSlide key={index}>
                                     <img
+                                    ref={ref}
                                         className={cx('img-slider')}
                                         src={`http://localhost:4000/src/${slider.image}`}
                                         alt=""
